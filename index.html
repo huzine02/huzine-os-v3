@@ -3,277 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUZINE OS // V5.2 AUTONOMOUS</title>
+    <title>HUZINE OS // ULTIMATE</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
 
         :root {
-            --bg-dark: #0B0E14;
-            --bg-panel: #151923;
-            --bg-input: #1F2433;
-            --pro-blue: #0076CE;
-            --saas-green: #00DC82;
-            --patri-purple: #A855F7;
+            /* --- PALETTE PREMIUM (Linear/Vercel vibes) --- */
+            --bg-deep: #030406;
+            --bg-subtle: #0A0C10;
+            --bg-panel: rgba(20, 23, 28, 0.6);
+            --border-light: rgba(255, 255, 255, 0.08);
+            
+            /* Accents */
+            --pro-blue: #3B82F6;
+            --saas-green: #10B981;
+            --patri-purple: #8B5CF6;
             --vie-pink: #EC4899;
-            --alert-red: #FF3366;
-            --warn-orange: #FF9900;
-            --star-gold: #FFD700;
-            --text-main: #E2E8F0;
-            --text-muted: #64748B;
-            --border: #2D3748;
+            --warn-orange: #F59E0B;
+            --alert-red: #EF4444;
+            --star-gold: #FCD34D;
+            
+            --text-main: #F1F5F9;
+            --text-muted: #94A3B8;
+            --text-dim: #475569;
+
+            /* System */
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --font-ui: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.05), transparent 25%);
             color: var(--text-main);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-ui);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* HEADER */
-        header {
-            background: var(--bg-panel);
-            border-bottom: 1px solid var(--border);
-            padding: 0.6rem 1.25rem;
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* --- HEADER --- */
+        header#main-header {
+            background: rgba(3, 4, 6, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0 1.5rem;
+            height: 64px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 58px;
+            z-index: 50;
         }
-        header.crisis-active { border-bottom: 2px solid var(--alert-red); }
+        
+        header.crisis-active { border-bottom: 1px solid var(--alert-red); box-shadow: 0 4px 30px rgba(239, 68, 68, 0.2); }
 
-        .brand { font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--pro-blue); font-size: 1rem; display: flex; align-items: center; gap: 8px; }
-        .brand span { color: var(--saas-green); }
-        .crisis-tag { background: var(--alert-red); color: white; font-size: 0.55rem; padding: 2px 5px; border-radius: 3px; animation: pulse 1s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .brand { font-family: var(--font-mono); font-weight: 700; color: var(--text-main); font-size: 0.95rem; display: flex; align-items: center; gap: 10px; }
+        .brand span { color: var(--text-muted); font-weight: 400; }
+        
+        .crisis-tag { background: rgba(239, 68, 68, 0.2); color: var(--alert-red); font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; font-weight: 700; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.7; } }
 
-        .braindump-wrapper { flex: 1; max-width: 400px; margin: 0 1rem; position: relative; }
+        /* INPUTS */
+        .braindump-wrapper { flex: 1; max-width: 500px; margin: 0 2rem; position: relative; }
         .braindump-input {
-            width: 100%; background: var(--bg-dark); border: 1px solid var(--border);
-            color: var(--saas-green); padding: 7px 10px 7px 30px; border-radius: 6px;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+            width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-light);
+            color: var(--text-main); padding: 10px 12px 10px 40px; border-radius: var(--radius-sm);
+            font-family: var(--font-ui); font-size: 0.85rem; transition: all 0.2s ease;
         }
-        .braindump-input:focus { border-color: var(--saas-green); }
-        .braindump-input::placeholder { color: var(--text-muted); }
-        .braindump-icon { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
+        .braindump-input:focus { background: rgba(255, 255, 255, 0.06); border-color: var(--text-muted); }
+        .braindump-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); }
 
-        .header-controls { display: flex; gap: 0.4rem; align-items: center; }
-        .btn-header {
-            background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border);
-            padding: 0 9px; font-weight: 600; font-size: 0.65rem; height: 30px; border-radius: 5px;
-            cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s;
+        /* CONTROLS */
+        .header-controls { display: flex; gap: 0.75rem; align-items: center; }
+        .btn-header, .btn-icon {
+            background: transparent; color: var(--text-muted); border: 1px solid var(--border-light);
+            height: 32px; border-radius: var(--radius-sm); cursor: pointer; display: flex;
+            align-items: center; justify-content: center; font-family: var(--font-ui);
+            font-weight: 500; font-size: 0.75rem; transition: all 0.2s;
         }
-        .btn-header:hover { background: var(--border); }
-        .btn-header.focus-active { background: var(--saas-green); color: black; border-color: var(--saas-green); }
-        .btn-header.crisis { border-color: var(--alert-red); color: var(--alert-red); }
-        .btn-header.crisis.active { background: var(--alert-red); color: white; }
-        .btn-icon { background: none; border: 1px solid var(--border); color: var(--text-muted); border-radius: 5px; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
-        .btn-icon:hover { color: var(--text-main); border-color: var(--text-main); }
-        #clock { font-family: 'JetBrains Mono'; font-weight: bold; font-size: 0.85rem; }
+        .btn-header { padding: 0 12px; gap: 6px; }
+        .btn-icon { width: 32px; }
+        .btn-header:hover, .btn-icon:hover { background: rgba(255,255,255,0.05); color: var(--text-main); border-color: var(--text-muted); }
+        
+        .btn-header.focus-active { background: var(--saas-green); color: #000; border-color: var(--saas-green); box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); }
+        .btn-header.crisis.active { background: var(--alert-red); color: white; border-color: var(--alert-red); }
+        #clock { font-family: var(--font-mono); font-weight: 600; font-size: 0.85rem; color: var(--text-main); margin-right: 0.5rem; }
 
         /* LAYOUT */
         .container { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 65px; background: var(--bg-panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 0.6rem; gap: 0.3rem; }
-        .nav-item { width: 48px; height: 48px; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: 0.2s; font-size: 0.55rem; gap: 2px; font-weight: 500; }
-        .nav-item i { font-size: 1.1rem; }
-        .nav-item:hover { background: var(--bg-input); color: var(--text-main); }
-        .nav-item.active { background: rgba(0, 118, 206, 0.15); color: var(--pro-blue); }
+        .sidebar { 
+            width: 72px; background: rgba(3, 4, 6, 0.5); border-right: 1px solid var(--border-light); 
+            display: flex; flex-direction: column; align-items: center; padding-top: 1.5rem; gap: 0.5rem; z-index: 40;
+        }
+        .nav-item { 
+            width: 44px; height: 44px; border-radius: 10px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; cursor: pointer; color: var(--text-dim); 
+            transition: all 0.3s; font-size: 0.6rem; gap: 2px; font-weight: 500; position: relative;
+        }
+        .nav-item i { font-size: 1.2rem; margin-bottom: 2px; }
+        .nav-item:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+        .nav-item.active { color: var(--text-main); background: rgba(255,255,255,0.08); }
+        .nav-item.active::before {
+            content: ''; position: absolute; left: -14px; top: 12px; bottom: 12px; width: 3px;
+            background: var(--text-main); border-radius: 0 4px 4px 0;
+        }
 
-        .main-content { flex: 1; padding: 1rem 1.25rem; overflow-y: auto; }
-        .view-section { display: none; animation: fadeIn 0.2s ease; }
+        /* MAIN */
+        .main-content { flex: 1; padding: 2rem 3rem; overflow-y: auto; background: radial-gradient(circle at top center, rgba(255,255,255,0.02), transparent 70%); }
+        .view-section { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* DASHBOARD */
+        .cockpit-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; }
+        .day-badge { padding: 6px 12px; border-radius: 100px; font-weight: 700; text-transform: uppercase; font-size: 0.7rem; display: inline-flex; align-items: center; gap: 8px; color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .greeting { color: var(--text-muted); font-size: 1.1rem; font-weight: 300; margin-top: 5px; }
+        .greeting span { color: var(--text-main); font-weight: 500; }
 
         /* TOP 3 */
         .top3-card {
-            background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.02));
-            border: 2px solid var(--star-gold); border-radius: 10px; padding: 0.9rem 1rem; margin-bottom: 1rem;
+            background: linear-gradient(180deg, rgba(20, 23, 28, 0.4), rgba(20, 23, 28, 0.8));
+            border: 1px solid rgba(252, 211, 77, 0.3); border-radius: var(--radius-md); 
+            padding: 1.25rem; margin-bottom: 2rem; position: relative; overflow: hidden;
+            box-shadow: 0 0 30px rgba(252, 211, 77, 0.05);
         }
-        .top3-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
-        .top3-title { font-weight: 700; font-size: 0.9rem; color: var(--star-gold); display: flex; align-items: center; gap: 6px; }
-        .top3-count { font-size: 0.7rem; color: var(--text-muted); }
-        .top3-list { display: flex; flex-direction: column; gap: 6px; }
-        .top3-empty { color: var(--text-muted); font-size: 0.8rem; text-align: center; padding: 0.75rem; }
-
-        /* COCKPIT */
-        .cockpit-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; }
-        .day-info { display: flex; flex-direction: column; gap: 3px; }
-        .day-badge { padding: 7px 14px; border-radius: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 6px; color: white; }
-        .greeting { color: var(--text-muted); font-size: 0.8rem; }
-
-        /* PILLAR GRID */
-        .pillar-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 0.75rem;
-            margin-bottom: 1rem;
+        .top3-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--star-gold), transparent); opacity: 0.5;
         }
+        .top3-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .top3-title { font-weight: 700; font-size: 0.8rem; color: var(--star-gold); letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
+        .top3-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 2px 6px; border-radius: 4px; }
+        .top3-list { display: flex; flex-direction: column; gap: 8px; }
+        .top3-empty { color: var(--text-dim); font-size: 0.85rem; font-style: italic; opacity: 0.7; padding: 10px; border: 1px dashed var(--border-light); text-align: center; }
 
+        /* PILLARS */
+        .pillar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
         .pillar-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            transition: opacity 0.3s, filter 0.3s;
-            position: relative;
-            min-height: 200px;
+            background: var(--bg-panel); backdrop-filter: blur(12px); border: 1px solid var(--border-light);
+            border-radius: var(--radius-md); padding: 1.25rem; display: flex; flex-direction: column;
+            transition: all 0.3s ease; min-height: 240px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
+        .pillar-card.focus { opacity: 1; box-shadow: 0 10px 40px rgba(0,0,0,0.3); transform: translateY(-2px); }
+        .pillar-card.medium { opacity: 0.85; filter: grayscale(0.2); }
+        .pillar-card.light { opacity: 0.6; filter: grayscale(0.5); }
+        .pillar-card.faded { opacity: 0.4; filter: grayscale(0.8); }
+        
+        .pillar-card.focus { border-color: var(--theme); box-shadow: 0 0 20px -5px var(--theme); }
+        .pillar-focus-tag { position: absolute; top: 12px; right: 12px; background: var(--theme); color: #000; font-size: 0.6rem; font-weight: 800; padding: 3px 8px; border-radius: 100px; }
 
-        .pillar-card.focus { opacity: 1; filter: none; border-width: 2px; }
-        .pillar-card.medium { opacity: 0.7; filter: none; }
-        .pillar-card.light { opacity: 0.5; filter: saturate(0.7); }
-        .pillar-card.faded { opacity: 0.35; filter: saturate(0.5) blur(0.5px); }
+        .pillar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-light); }
+        .pillar-title { font-weight: 600; font-size: 0.9rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+        .pillar-badge { font-family: var(--font-mono); font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted); }
+        .pillar-tasks { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 
-        .pillar-card.focus.pro { border-color: var(--pro-blue); }
-        .pillar-card.focus.saas { border-color: var(--saas-green); }
-        .pillar-card.focus.vie { border-color: var(--vie-pink); }
-        .pillar-card.focus.patri { border-color: var(--patri-purple); }
-
-        .pillar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
-        .pillar-title { font-weight: 600; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
-        .pillar-badge { font-size: 0.6rem; padding: 2px 6px; border-radius: 6px; font-weight: 600; }
-
-        .pillar-focus-tag {
-            position: absolute; top: -8px; right: 10px;
-            background: var(--star-gold); color: black;
-            font-size: 0.55rem; font-weight: 700; padding: 2px 8px;
-            border-radius: 4px; text-transform: uppercase;
-        }
-
-        /* TASK ROWS */
-        .task-row { display: flex; align-items: center; padding: 6px 0; border-bottom: 1px dashed var(--border); transition: background 0.2s; }
-        .task-row:last-child { border-bottom: none; }
-        .task-row:hover { background: rgba(255,255,255,0.02); }
-        .task-check { appearance: none; width: 16px; height: 16px; border: 2px solid var(--text-muted); border-radius: 4px; margin-right: 8px; cursor: pointer; position: relative; transition: 0.2s; flex-shrink: 0; }
+        /* TASKS */
+        .task-row { display: flex; align-items: center; padding: 8px 10px; border-radius: var(--radius-sm); transition: all 0.2s; border: 1px solid transparent; }
+        .task-row:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.05); }
+        .task-check { appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--text-muted); border-radius: 5px; margin-right: 12px; cursor: pointer; position: relative; flex-shrink: 0; }
         .task-check:checked { background: var(--saas-green); border-color: var(--saas-green); }
-        .task-check:checked::after { content: '✓'; position: absolute; color: black; font-weight: bold; font-size: 10px; left: 2px; top: -2px; }
-        .task-content { flex: 1; font-size: 0.8rem; line-height: 1.3; cursor: pointer; }
-        .task-done .task-content { text-decoration: line-through; color: var(--text-muted); cursor: default; }
-        .task-star { background: none; border: none; cursor: pointer; font-size: 0.9rem; color: var(--text-muted); padding: 2px 4px; transition: 0.2s; }
-        .task-star:hover { color: var(--star-gold); }
-        .task-star.active { color: var(--star-gold); }
-        .task-delete { background: none; border: none; color: var(--text-muted); cursor: pointer; opacity: 0; transition: 0.2s; padding: 2px 4px; font-size: 0.8rem; }
-        .task-row:hover .task-delete { opacity: 1; }
-        .task-delete:hover { color: var(--alert-red); }
-        .task-type-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; flex-shrink: 0; }
-
-        .empty-state { text-align: center; padding: 1rem; color: var(--text-muted); font-size: 0.75rem; }
-        .add-task-btn { width: 100%; padding: 6px; background: transparent; border: 1px dashed var(--border); color: var(--text-muted); cursor: pointer; border-radius: 5px; font-size: 0.7rem; margin-top: 8px; transition: 0.2s; }
-        .add-task-btn:hover { border-color: var(--text-muted); color: var(--text-main); }
+        .task-check:checked::after { content: ''; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid black; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .task-content { flex: 1; font-size: 0.85rem; color: var(--text-main); cursor: pointer; }
+        .task-done .task-content { text-decoration: line-through; color: var(--text-dim); }
+        .task-star { background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--text-dim); opacity: 0.5; margin-left: 8px; }
+        .task-row:hover .task-star { opacity: 1; }
+        .task-star.active { color: var(--star-gold); opacity: 1; transform: scale(1.1); }
+        .task-delete { background: none; border: none; color: var(--alert-red); cursor: pointer; opacity: 0; margin-left: 8px; }
+        .task-row:hover .task-delete { opacity: 0.5; }
+        .task-delete:hover { opacity: 1; }
+        
+        .add-task-btn { width: 100%; padding: 10px; margin-top: 12px; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-light); color: var(--text-muted); cursor: pointer; border-radius: var(--radius-sm); font-size: 0.75rem; transition: all 0.2s; font-weight: 500; }
+        .add-task-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); color: var(--text-main); }
 
         /* JOURNAL */
-        .journal-section { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
-        .journal-header { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.9rem; cursor: pointer; transition: background 0.2s; }
-        .journal-header:hover { background: var(--bg-input); }
-        .journal-title { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
-        .journal-toggle { font-size: 0.75rem; color: var(--text-muted); }
-        .journal-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 0.9rem; }
-        .journal-body.expanded { max-height: 250px; padding: 0.6rem 0.9rem; border-top: 1px solid var(--border); }
-        .journal-input-row { display: flex; gap: 6px; margin-bottom: 8px; }
-        .journal-input { flex: 1; background: var(--bg-input); border: 1px solid var(--border); border-radius: 5px; padding: 6px 8px; color: var(--text-main); font-family: inherit; font-size: 0.75rem; }
+        .journal-section { background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-md); overflow: hidden; margin-top: 2rem; }
+        .journal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.25rem; cursor: pointer; transition: background 0.2s; }
+        .journal-header:hover { background: rgba(255,255,255,0.02); }
+        .journal-title { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+        .journal-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; padding: 0 1.25rem; }
+        .journal-body.expanded { max-height: 300px; padding: 0 1.25rem 1.25rem 1.25rem; border-top: 1px solid var(--border-light); }
+        .journal-input-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .journal-input { flex: 1; background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text-main); font-family: var(--font-ui); font-size: 0.85rem; }
         .journal-input:focus { border-color: var(--pro-blue); }
-        .journal-entries { max-height: 100px; overflow-y: auto; }
-        .journal-entry { padding: 4px 0; border-bottom: 1px dashed var(--border); font-size: 0.7rem; display: flex; gap: 6px; }
-        .journal-entry:last-child { border-bottom: none; }
-        .journal-time { color: var(--pro-blue); font-family: 'JetBrains Mono'; font-size: 0.65rem; flex-shrink: 0; }
-        .journal-text { color: var(--text-muted); }
+        .journal-entry { padding: 8px 0; border-bottom: 1px solid var(--border-light); font-size: 0.8rem; display: flex; gap: 12px; align-items: baseline; }
+        .journal-time { color: var(--pro-blue); font-family: var(--font-mono); font-size: 0.7rem; opacity: 0.8; }
 
         /* TABLES */
-        .smart-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        .smart-table th { text-align: left; padding: 8px 6px; color: var(--text-muted); border-bottom: 1px solid var(--border); font-size: 0.65rem; text-transform: uppercase; }
-        .smart-table td { padding: 8px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        .add-row-btn { margin-top: 8px; width: 100%; padding: 8px; background: var(--bg-input); border: 1px dashed var(--border); color: var(--text-muted); cursor: pointer; border-radius: 6px; font-size: 0.75rem; transition: 0.2s; }
-        .add-row-btn:hover { border-color: var(--text-muted); color: var(--text-main); }
+        .smart-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.85rem; }
+        .smart-table th { text-align: left; padding: 12px 10px; color: var(--text-dim); border-bottom: 1px solid var(--border-light); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+        .smart-table td { padding: 10px; border-bottom: 1px solid var(--border-light); vertical-align: middle; }
 
         /* PROJECTS */
-        .project-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 0.9rem; }
-        .project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; }
-        .project-title { font-weight: 600; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
-        .timeline-track { height: 6px; background: var(--bg-input); border-radius: 3px; margin: 8px 0; overflow: hidden; }
-        .timeline-bar { height: 100%; background: linear-gradient(90deg, var(--pro-blue), var(--saas-green)); width: 0%; transition: width 0.5s; border-radius: 3px; }
-        .project-input-row { display: flex; gap: 6px; margin-top: 8px; }
-        .project-input { flex: 1; background: var(--bg-input); border: 1px solid var(--border); border-radius: 5px; padding: 7px 9px; color: var(--text-main); font-family: inherit; font-size: 0.8rem; }
-        .project-input:focus { border-color: var(--patri-purple); }
+        .project-card { background: var(--bg-panel); border: 1px solid var(--border-light); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .project-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .project-title { font-weight: 600; font-size: 1rem; color: var(--text-main); }
+        .timeline-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 12px 0 20px 0; overflow: hidden; }
+        .timeline-bar { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--pro-blue), var(--saas-green)); box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        .project-input { flex: 1; background: var(--bg-subtle); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 8px 12px; color: var(--text-main); font-size: 0.85rem; }
 
-        /* WEEK VIEW */
-        .week-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 1rem; }
-        .week-day { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; text-align: center; transition: 0.2s; }
-        .week-day:hover { border-color: var(--text-muted); }
-        .week-day.today { border-color: var(--saas-green); box-shadow: 0 0 8px rgba(0, 220, 130, 0.15); }
-        .week-day-name { font-weight: 600; font-size: 0.8rem; margin-bottom: 2px; }
-        .week-day-theme { font-size: 0.6rem; color: var(--text-muted); }
+        /* WEEK GRID */
+        .week-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 1.5rem; }
+        .week-day { background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 1rem 0.5rem; text-align: center; }
+        .week-day.today { background: rgba(16, 185, 129, 0.1); border-color: var(--saas-green); }
+        .week-day-name { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; }
+        .week-day-theme { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; }
 
-        .rules-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; margin-top: 1rem; }
-        .rules-card h3 { font-size: 0.85rem; margin-bottom: 0.6rem; color: var(--warn-orange); }
-        .rules-list { list-style: none; color: var(--text-muted); font-size: 0.75rem; line-height: 1.7; }
-        .rules-list li::before { content: "→ "; color: var(--pro-blue); }
+        /* TIMER & MODALS */
+        .timer-float { position: fixed; bottom: 24px; right: 24px; background: #000; border: 1px solid var(--border-light); padding: 8px 16px; border-radius: 100px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100; transition: border 0.3s; }
+        .timer-float.active { border-color: var(--saas-green); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); }
+        .timer-time { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: var(--text-main); }
+        .timer-btn { color: var(--text-muted); font-size: 1rem; cursor: pointer; background: none; border: none; }
+        .timer-btn:hover { color: var(--text-main); }
 
-        /* TIMER */
-        .timer-float { position: fixed; bottom: 12px; right: 12px; background: var(--bg-panel); border: 1px solid var(--border); padding: 8px 14px; border-radius: 35px; display: flex; align-items: center; gap: 8px; box-shadow: 0 6px 20px rgba(0,0,0,0.4); z-index: 100; }
-        .timer-float.active { border-color: var(--saas-green); }
-        .timer-float.hidden { display: none; }
-        .timer-time { font-family: 'JetBrains Mono'; font-size: 1rem; font-weight: bold; }
-        .timer-btn { background: none; border: none; font-size: 0.9rem; cursor: pointer; color: var(--text-main); padding: 2px; transition: 0.2s; }
-        .timer-btn:hover { color: var(--saas-green); }
-        .timer-btn.active { color: var(--alert-red); }
-
-        /* FOCUS MODE */
-        .focus-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-dark); z-index: 500; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .focus-overlay.show { display: flex; }
-        .focus-exit { position: absolute; top: 12px; right: 15px; background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 7px 14px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
-        .focus-exit:hover { color: var(--text-main); border-color: var(--text-main); }
-        .focus-type { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 0.6rem; font-weight: 600; }
-        .focus-task { font-size: 1.3rem; font-weight: 700; text-align: center; max-width: 500px; margin-bottom: 1.25rem; line-height: 1.4; }
-        .focus-timer { font-family: 'JetBrains Mono'; font-size: 3rem; font-weight: bold; color: var(--saas-green); margin-bottom: 1.25rem; }
-        .focus-controls { display: flex; gap: 0.6rem; }
-        .focus-btn { padding: 9px 20px; border-radius: 7px; border: none; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: 0.2s; }
-        .focus-btn.primary { background: var(--saas-green); color: black; }
-        .focus-btn.secondary { background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border); }
-        .focus-btn:hover { opacity: 0.9; }
-
-        /* MODALS */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; display: none; justify-content: center; align-items: center; }
-        .modal-overlay.show { display: flex; }
-        .modal-content { text-align: center; max-width: 380px; padding: 1.75rem; border: 1px solid var(--border); background: var(--bg-panel); border-radius: 14px; }
-        .shutdown-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
-        .shutdown-title { font-size: 1.2rem; font-weight: 800; color: var(--warn-orange); margin-bottom: 0.3rem; }
-        .shutdown-subtitle { color: var(--text-muted); margin-bottom: 0.9rem; font-size: 0.8rem; }
-        .shutdown-checklist { text-align: left; margin: 0.9rem 0; }
-        .shutdown-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--border); color: var(--text-muted); font-size: 0.8rem; }
-        .shutdown-item:last-child { border-bottom: none; }
-        .shutdown-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--saas-green); }
-        .shutdown-item input[type="text"] { flex: 1; background: var(--bg-input); border: 1px solid var(--border); border-radius: 5px; padding: 5px; color: var(--text-main); font-size: 0.75rem; }
-        .shutdown-btn { background: var(--warn-orange); color: black; border: none; padding: 10px 20px; font-weight: 700; cursor: pointer; width: 100%; border-radius: 7px; font-size: 0.85rem; margin-top: 0.6rem; }
-        .shutdown-btn:hover { background: #FFB033; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 999; display: none; justify-content: center; align-items: center; }
+        .modal-overlay.show { display: flex; animation: fadeIn 0.2s ease; }
+        .modal-content { text-align: center; max-width: 420px; width: 90%; padding: 2rem; border: 1px solid var(--border-light); background: #0A0C10; border-radius: var(--radius-lg); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .shutdown-title { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; }
+        .shutdown-subtitle { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .import-area { width: 100%; height: 120px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-light); color: var(--saas-green); font-family: var(--font-mono); font-size: 0.75rem; padding: 12px; border-radius: var(--radius-sm); margin-bottom: 1rem; resize: none; }
+        .copy-prompt-btn { background: rgba(59, 130, 246, 0.1); color: var(--pro-blue); border: 1px solid rgba(59, 130, 246, 0.2); padding: 10px; width: 100%; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.8rem; cursor: pointer; margin-bottom: 1rem; }
+        .shutdown-btn { background: var(--text-main); color: #000; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; width: 100%; border-radius: var(--radius-sm); font-size: 0.9rem; }
         
-        /* IMPORT AI MODAL */
-        .ai-step { text-align: left; margin-bottom: 1rem; border-bottom: 1px dashed var(--border); padding-bottom: 1rem; }
-        .ai-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.5rem; }
-        .import-area { width: 100%; height: 100px; background: var(--bg-input); border: 1px solid var(--border); color: var(--saas-green); font-family: 'JetBrains Mono'; font-size: 0.7rem; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
-        .copy-prompt-btn { background: var(--pro-blue); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 6px; width: 100%; justify-content: center; }
-        .copy-prompt-btn:hover { opacity: 0.9; }
+        .focus-overlay { background: #030406; }
+        .focus-task { font-size: 2rem; font-weight: 800; text-align: center; max-width: 600px; margin-bottom: 2rem; line-height: 1.2; background: linear-gradient(180deg, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .focus-type { color: var(--pro-blue); letter-spacing: 0.1em; margin-bottom: 1rem; font-size: 0.9rem; }
+        .focus-timer { font-size: 4rem; color: var(--text-dim); font-weight: 300; margin-bottom: 3rem; font-family: var(--font-mono); }
+        .focus-btn { padding: 12px 30px; border-radius: 100px; font-size: 1rem; border:none; cursor: pointer; }
+        .focus-btn.primary { background: var(--text-main); color: black; }
+        .focus-btn.secondary { background: transparent; border: 1px solid var(--border-light); color: var(--text-muted); }
 
         .hidden { display: none !important; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-        @media (max-width: 1100px) { .pillar-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 768px) {
-            .sidebar { width: 50px; }
-            .nav-item { width: 38px; height: 38px; }
-            .nav-item span { display: none; }
-            .braindump-wrapper { display: none; }
-            .pillar-grid { grid-template-columns: 1fr; }
-            .week-grid { grid-template-columns: repeat(3, 1fr); }
-        }
+        @media (max-width: 768px) { .sidebar { width: 60px; } .braindump-wrapper { display: none; } .pillar-grid { grid-template-columns: 1fr; } .week-grid { grid-template-columns: repeat(3, 1fr); } .main-content { padding: 1rem; } }
     </style>
 </head>
 <body>
@@ -286,7 +261,7 @@
     </div>
     <div class="header-controls">
         <div id="clock">00:00</div>
-        <button class="btn-header" onclick="openAiImport()" style="border-color:var(--patri-purple); color:var(--patri-purple);" title="Importer des tâches IA">📥 IMPORT IA</button>
+        <button class="btn-header" onclick="openAiImport()" style="border-color:var(--patri-purple); color:var(--patri-purple);" title="Import IA">📥 IMPORT IA</button>
         <button class="btn-header" id="btn-focus" onclick="toggleFocusMode()">🎯 FOCUS</button>
         <button class="btn-header crisis" id="btn-crisis" onclick="toggleCrisisMode()">🚨</button>
         <button class="btn-header" onclick="exportData()">💾</button>
@@ -306,7 +281,6 @@
     </nav>
 
     <main class="main-content">
-        <!-- VUES (Identique V5) -->
         <!-- DASHBOARD -->
         <section id="view-dashboard" class="view-section active">
             <div class="cockpit-header">
@@ -314,7 +288,7 @@
                     <div id="day-badge" class="day-badge">CHARGEMENT...</div>
                     <div class="greeting"><span id="greeting-text">Bonjour</span>, Huzine.</div>
                 </div>
-                <button onclick="openShutdown()" style="background:transparent; border:1px solid var(--warn-orange); color:var(--warn-orange); padding:7px 12px; border-radius:6px; cursor:pointer; font-weight:600; font-size:0.75rem;">🌙 Shutdown</button>
+                <button onclick="openShutdown()" class="btn-header" style="color:var(--warn-orange); border-color:var(--warn-orange);">🌙 Shutdown</button>
             </div>
 
             <!-- TOP 3 -->
@@ -323,9 +297,7 @@
                     <span class="top3-title">⭐ TOP 3 DU JOUR</span>
                     <span class="top3-count" id="top3-count">0/3</span>
                 </div>
-                <div class="top3-list" id="top3-list">
-                    <div class="top3-empty">Clique sur ⭐ pour marquer tes priorités</div>
-                </div>
+                <div class="top3-list" id="top3-list"></div>
             </div>
 
             <!-- 4 PILLAR CARDS -->
@@ -340,7 +312,7 @@
                 <div class="journal-body" id="journal-body">
                     <div class="journal-input-row">
                         <input type="text" id="journal-input" class="journal-input" placeholder="Comment je me sens ?">
-                        <button onclick="addJournalEntry()" class="btn-icon" style="width:28px;height:28px;font-size:0.8rem;">+</button>
+                        <button onclick="addJournalEntry()" class="btn-icon" style="width:32px;">+</button>
                     </div>
                     <div class="journal-entries" id="journal-entries"></div>
                 </div>
@@ -349,49 +321,49 @@
 
         <!-- PRO -->
         <section id="view-pro" class="view-section">
-            <h2 style="color:var(--pro-blue); margin-bottom:1rem; font-size:1rem;">💼 PRO / Dell</h2>
+            <h2 style="color:var(--pro-blue); margin-bottom:1rem; font-size:1.2rem; font-weight:700;">💼 PRO / Dell</h2>
             <div class="project-card">
                 <table class="smart-table">
-                    <thead><tr><th width="25"></th><th>Tâche</th><th width="50">⭐</th><th width="35"></th></tr></thead>
+                    <thead><tr><th width="30"></th><th>Tâche</th><th width="50">⭐</th><th width="40"></th></tr></thead>
                     <tbody id="table-pro-body"></tbody>
                 </table>
-                <button onclick="addNewTask('pro')" class="add-row-btn">+ Ajouter tâche PRO</button>
+                <button onclick="addNewTask('pro')" class="add-task-btn">+ Ajouter tâche PRO</button>
             </div>
         </section>
 
         <!-- SAAS -->
         <section id="view-saas" class="view-section">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-                <h2 style="color:var(--saas-green); font-size:1rem;">💻 SaaS / Nutri-Track</h2>
+                <h2 style="color:var(--saas-green); font-size:1.2rem; font-weight:700;">💻 SaaS / Nutri-Track</h2>
                 <div style="display:flex; gap:6px;">
-                    <input type="text" id="input-mrr" placeholder="MRR €" style="background:var(--bg-input); border:1px solid var(--border); padding:5px 8px; color:white; width:80px; border-radius:5px; font-size:0.8rem;" onchange="updateMetrics()">
-                    <input type="text" id="input-users" placeholder="Users" style="background:var(--bg-input); border:1px solid var(--border); padding:5px 8px; color:white; width:70px; border-radius:5px; font-size:0.8rem;" onchange="updateMetrics()">
+                    <input type="text" id="input-mrr" placeholder="MRR €" style="background:var(--bg-subtle); border:1px solid var(--border-light); padding:5px 8px; color:white; width:80px; border-radius:4px; font-size:0.8rem;" onchange="updateMetrics()">
+                    <input type="text" id="input-users" placeholder="Users" style="background:var(--bg-subtle); border:1px solid var(--border-light); padding:5px 8px; color:white; width:70px; border-radius:4px; font-size:0.8rem;" onchange="updateMetrics()">
                 </div>
             </div>
             <div class="project-card">
                 <table class="smart-table">
-                    <thead><tr><th width="25"></th><th>Feature / Tâche</th><th width="50">⭐</th><th width="35"></th></tr></thead>
+                    <thead><tr><th width="30"></th><th>Feature / Tâche</th><th width="50">⭐</th><th width="40"></th></tr></thead>
                     <tbody id="table-saas-body"></tbody>
                 </table>
-                <button onclick="addNewTask('saas')" class="add-row-btn">+ Ajouter tâche SaaS</button>
+                <button onclick="addNewTask('saas')" class="add-task-btn">+ Ajouter tâche SaaS</button>
             </div>
         </section>
 
         <!-- VIE -->
         <section id="view-vie" class="view-section">
-            <h2 style="color:var(--vie-pink); margin-bottom:1rem; font-size:1rem;">🧬 Vie / Admin</h2>
+            <h2 style="color:var(--vie-pink); margin-bottom:1rem; font-size:1.2rem; font-weight:700;">🧬 Vie / Admin</h2>
             <div class="project-card">
                 <table class="smart-table">
-                    <thead><tr><th width="25"></th><th>Tâche</th><th width="50">⭐</th><th width="35"></th></tr></thead>
+                    <thead><tr><th width="30"></th><th>Tâche</th><th width="50">⭐</th><th width="40"></th></tr></thead>
                     <tbody id="table-vie-body"></tbody>
                 </table>
-                <button onclick="addNewTask('vie')" class="add-row-btn">+ Ajouter (docteur, admin, famille...)</button>
+                <button onclick="addNewTask('vie')" class="add-task-btn">+ Ajouter (docteur, admin...)</button>
             </div>
         </section>
 
         <!-- PATRIMOINE -->
         <section id="view-patrimoine" class="view-section">
-            <h2 style="color:var(--patri-purple); margin-bottom:1rem; font-size:1rem;">🏗️ Patrimoine</h2>
+            <h2 style="color:var(--patri-purple); margin-bottom:1rem; font-size:1.2rem; font-weight:700;">🏗️ Patrimoine</h2>
             
             <div class="project-card" style="border-left: 3px solid var(--patri-purple);">
                 <div class="project-header">
@@ -440,33 +412,33 @@
 
         <!-- REVIEW -->
         <section id="view-review" class="view-section">
-            <h2 style="margin-bottom:1rem; font-size:1rem;">📅 Architecture Semaine</h2>
+            <h2 style="margin-bottom:1rem; font-size:1.2rem; font-weight:700;">📅 Architecture Semaine</h2>
             <div class="week-grid" id="week-grid"></div>
             <div class="rules-card">
                 <h3>⚡ Règles d'Or</h3>
                 <ul class="rules-list">
-                    <li><strong>18h30-21h30</strong> : Famille INTOUCHABLE</li>
-                    <li><strong>22h45</strong> : Shutdown Protocol</li>
-                    <li><strong>Top 3</strong> : Max 3 priorités/jour</li>
-                    <li><strong>Vendredi</strong> : Patrimoine Friday</li>
-                    <li><strong>Week-end</strong> : Vie + Patrimoine focus</li>
+                    <li>18h30-21h30 : Famille INTOUCHABLE</li>
+                    <li>22h45 : Shutdown Protocol</li>
+                    <li>Top 3 : Max 3 priorités/jour</li>
+                    <li>Vendredi : Patrimoine Friday</li>
+                    <li>Week-end : Vie + Patrimoine focus</li>
                 </ul>
             </div>
             <div class="project-card" style="margin-top:1rem;">
                 <div class="pillar-header"><span class="pillar-title">📝 Weekly Review</span></div>
-                <div style="display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; flex-direction:column; gap:12px;">
                     <div>
-                        <label style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:3px;">1. Victoire de la semaine ?</label>
+                        <label style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:4px;">1. Victoire de la semaine ?</label>
                         <input type="text" id="review-win" class="project-input" style="width:100%;" onchange="saveReview()">
                     </div>
                     <div>
-                        <label style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:3px;">2. Ce qui n'a pas fonctionné ?</label>
+                        <label style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:4px;">2. Ce qui n'a pas fonctionné ?</label>
                         <input type="text" id="review-fail" class="project-input" style="width:100%;" onchange="saveReview()">
                     </div>
                     <div>
-                        <label style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:3px;">3. PRIORITÉ semaine prochaine ?</label>
+                        <label style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:4px;">3. PRIORITÉ semaine prochaine ?</label>
                         <input type="text" id="review-priority" class="project-input" style="width:100%;" onchange="saveReview()">
-                        <button onclick="createTaskFromPriority()" style="margin-top:6px; background:var(--saas-green); color:black; border:none; padding:7px 14px; border-radius:5px; cursor:pointer; font-size:0.75rem; font-weight:600;">→ Créer comme TOP 3</button>
+                        <button onclick="createTaskFromPriority()" class="shutdown-btn" style="margin-top:10px; background:var(--saas-green); color:#000;">→ Créer comme TOP 3</button>
                     </div>
                 </div>
             </div>
@@ -483,28 +455,27 @@
 
 <!-- FOCUS -->
 <div class="focus-overlay" id="focus-overlay">
-    <button class="focus-exit" onclick="exitFocusMode()">✕ Quitter</button>
+    <button class="focus-exit" style="position:absolute; top:20px; right:20px; background:none; border:1px solid #333; color:#666; padding:10px 20px; border-radius:100px; cursor:pointer;" onclick="exitFocusMode()">✕ Quitter</button>
     <div class="focus-type" id="focus-type-label">PRO</div>
     <div class="focus-task" id="focus-task-text">Sélectionne une tâche</div>
     <div class="focus-timer" id="focus-timer-display">00:00</div>
-    <div class="focus-controls">
+    <div class="focus-controls" style="display:flex; gap:15px;">
         <button class="focus-btn secondary" id="focus-toggle-btn" onclick="toggleFocusTimer()">▶ Timer</button>
         <button class="focus-btn primary" onclick="completeFocusTask()">✓ TERMINÉ</button>
-        <button class="focus-btn secondary" onclick="nextFocusTask()">→ SUIVANTE</button>
+        <button class="focus-btn secondary" onclick="nextFocusTask()">→</button>
     </div>
 </div>
 
 <!-- SHUTDOWN -->
 <div class="modal-overlay" id="shutdown-modal">
     <div class="modal-content">
-        <div class="shutdown-icon">🌙</div>
-        <div class="shutdown-title">SHUTDOWN</div>
+        <div class="shutdown-title">🌙 SHUTDOWN</div>
         <div class="shutdown-subtitle">22h45 — Préparation sommeil</div>
-        <div class="shutdown-checklist">
-            <div class="shutdown-item"><input type="checkbox"><label>Victoire notée</label></div>
-            <div class="shutdown-item"><input type="checkbox"><label>Top 3 demain:</label></div>
-            <div class="shutdown-item" style="padding-left:23px;"><input type="text" id="shutdown-tomorrow" placeholder="1. / 2. / 3."></div>
-            <div class="shutdown-item"><input type="checkbox"><label>Écrans éteints</label></div>
+        <div style="text-align:left; margin-bottom:1.5rem; display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; gap:10px;"><input type="checkbox"><label style="color:var(--text-muted); font-size:0.9rem;">Victoire notée</label></div>
+            <div style="display:flex; gap:10px;"><input type="checkbox"><label style="color:var(--text-muted); font-size:0.9rem;">Top 3 demain:</label></div>
+            <input type="text" id="shutdown-tomorrow" class="project-input" placeholder="1. / 2. / 3.">
+            <div style="display:flex; gap:10px;"><input type="checkbox"><label style="color:var(--text-muted); font-size:0.9rem;">Écrans éteints</label></div>
         </div>
         <button onclick="closeShutdown()" class="shutdown-btn">BONNE NUIT 💪</button>
     </div>
@@ -512,25 +483,16 @@
 
 <!-- AI IMPORT MODAL -->
 <div class="modal-overlay" id="ai-import-modal">
-    <div class="modal-content" style="max-width:500px;">
+    <div class="modal-content">
         <div class="shutdown-title" style="color:var(--patri-purple);">📥 IMPORT IA</div>
-        <div class="shutdown-subtitle" style="margin-bottom:1rem;">Transforme tes PDF en tâches instantanément</div>
+        <div class="shutdown-subtitle">Transforme tes PDF en tâches instantanément</div>
         
-        <div class="ai-step">
-            <span class="ai-label">1. GÉNÉRER AVEC L'IA</span>
-            <button onclick="copyAgentPrompt()" class="copy-prompt-btn">
-                📋 COPIER LE PROMPT AGENT
-            </button>
-            <div style="font-size:0.65rem; color:var(--text-muted); margin-top:5px;">Colle ça dans ChatGPT + ton document (PDF/Texte)</div>
-        </div>
-
-        <div class="ai-step" style="border-bottom:none; margin-bottom:0;">
-            <span class="ai-label">2. COLLER LE RÉSULTAT</span>
-            <textarea id="ai-import-text" class="import-area" placeholder='Colle le bloc JSON ici (ex: [{"type":"annaba", ...}])'></textarea>
-            <div style="display:flex; gap:10px;">
-                <button onclick="document.getElementById('ai-import-modal').classList.remove('show')" class="shutdown-btn" style="background:var(--bg-input); color:var(--text-main);">ANNULER</button>
-                <button onclick="processAiImport()" class="shutdown-btn" style="background:var(--patri-purple);">IMPORTER</button>
-            </div>
+        <button onclick="copyAgentPrompt()" class="copy-prompt-btn">📋 1. COPIER LE PROMPT AGENT</button>
+        <textarea id="ai-import-text" class="import-area" placeholder='2. Colle le bloc JSON ici (ex: [{"type":"annaba", ...}])'></textarea>
+        
+        <div style="display:flex; gap:10px;">
+            <button onclick="document.getElementById('ai-import-modal').classList.remove('show')" class="shutdown-btn" style="background:var(--bg-subtle); color:var(--text-muted);">ANNULER</button>
+            <button onclick="processAiImport()" class="shutdown-btn" style="background:var(--patri-purple); color:white;">IMPORTER</button>
         </div>
     </div>
 </div>
@@ -541,30 +503,28 @@
 // ===============================================
 const AGENT_PROMPT = `
 # RÔLE :
-Tu es mon "Project Slicer" expert (Méthodologie GTD + Agile). Je suis Huzine, Tech Manager (Dell), Père de 3 enfants.
+Tu es mon "Project Slicer" expert (Méthodologie GTD + Agile). Je suis Huzine, Tech Manager (Dell).
 
 # MISSION :
-Analyse le document ou le texte que je te fournis ci-joint.
-1. DÉCOUPE ce projet en une liste d'actions concrètes (45-60 min max).
+Analyse le document ou texte fourni.
+1. DÉCOUPE ce projet en actions concrètes (45-60 min max).
 2. CLASSE-les dans les bonnes catégories.
-3. GÉNÈRE UNIQUEMENT UN BLOC JSON strict (sans texte avant/après).
+3. GÉNÈRE UNIQUEMENT UN BLOC JSON strict.
 
-# CATÉGORIES VALIDES ("type") :
-- "pro" (Dell, Management)
-- "saas" (Dev, Nutri-Track)
-- "vie" (Admin, Famille, Santé)
-- "annaba" (Rénovation Algérie)
+# CATÉGORIES ("type") :
+- "pro" (Dell)
+- "saas" (Nutri-Track)
+- "vie" (Admin/Famille)
+- "annaba" (Rénov Algérie)
 - "copro" (Syndic)
-- "airbnb" (Gestion locative)
-- "maison" (Entretien domicile)
+- "airbnb"
+- "maison"
 
 # FORMAT DE SORTIE (JSON LIST) :
 [
-  {"type": "annaba", "text": "Action précise 1", "priority": "H"},
-  {"type": "pro", "text": "Action précise 2", "priority": "M"}
+  {"type": "annaba", "text": "Appeler archi pour plan", "priority": "H"},
+  {"type": "pro", "text": "Revue trimestrielle", "priority": "M"}
 ]
-
-Attends mon document.
 `;
 
 // ===============================================
@@ -596,10 +556,10 @@ const dayConfig = {
 };
 
 const pillarInfo = {
-    pro: { icon: '💼', name: 'PRO', color: 'var(--pro-blue)', types: ['pro'] },
-    saas: { icon: '💻', name: 'SaaS', color: 'var(--saas-green)', types: ['saas'] },
-    vie: { icon: '🧬', name: 'Vie', color: 'var(--vie-pink)', types: ['vie'] },
-    patri: { icon: '🏗️', name: 'Patrimoine', color: 'var(--patri-purple)', types: ['annaba', 'copro', 'airbnb', 'maison'] }
+    pro: { icon: '💼', name: 'PRO', color: 'var(--pro-blue)', themeClass: 'pro', types: ['pro'] },
+    saas: { icon: '💻', name: 'SaaS', color: 'var(--saas-green)', themeClass: 'saas', types: ['saas'] },
+    vie: { icon: '🧬', name: 'Vie', color: 'var(--vie-pink)', themeClass: 'vie', types: ['vie'] },
+    patri: { icon: '🏗️', name: 'Patrimoine', color: 'var(--patri-purple)', themeClass: 'patri', types: ['annaba', 'copro', 'airbnb', 'maison'] }
 };
 
 // ===============================================
@@ -638,9 +598,6 @@ function saveData() {
     renderAll();
 }
 
-// ===============================================
-// SETUP DAY
-// ===============================================
 function setupDay() {
     const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
     const now = new Date();
@@ -660,7 +617,7 @@ function setupDay() {
 }
 
 // ===============================================
-// RENDER PILLAR GRID
+// RENDERING
 // ===============================================
 function renderPillarGrid() {
     const dayIdx = new Date().getDay();
@@ -679,19 +636,19 @@ function renderPillarGrid() {
         const totalCount = tasks.length;
         
         return `
-            <div class="pillar-card ${level} ${pillarKey}" style="border-top: 3px solid ${info.color};">
+            <div class="pillar-card ${level} ${info.themeClass}" style="--theme: ${info.color}">
                 ${level === 'focus' ? '<div class="pillar-focus-tag">FOCUS</div>' : ''}
                 <div class="pillar-header">
                     <span class="pillar-title" style="color:${info.color}">${info.icon} ${info.name}</span>
-                    <span class="pillar-badge" style="background:${info.color}20; color:${info.color};">${totalCount - doneCount}</span>
+                    <span class="pillar-badge">${totalCount - doneCount}</span>
                 </div>
                 <div class="pillar-tasks">
-                    ${activeTasks.length === 0 ? '<div class="empty-state">Aucune tâche</div>' : 
+                    ${activeTasks.length === 0 ? '<div class="top3-empty" style="border:none; padding:0;">Aucune tâche</div>' : 
                         activeTasks.map(t => `
-                            <div class="task-row" data-id="${t.id}">
+                            <div class="task-row">
                                 <input type="checkbox" class="task-check" onclick="event.stopPropagation(); toggleTask(${t.id})">
-                                <span class="task-content" onclick="startFocusOnTask(${t.id})" style="cursor:pointer;">${escapeHtml(t.text)}</span>
-                                <button class="task-star ${t.todayStar ? 'active' : ''}" onclick="event.stopPropagation(); toggleStar(${t.id})">${t.todayStar ? '⭐' : '☆'}</button>
+                                <span class="task-content" onclick="startFocusOnTask(${t.id})">${escapeHtml(t.text)}</span>
+                                <button class="task-star ${t.todayStar ? 'active' : ''}" onclick="event.stopPropagation(); toggleStar(${t.id})">★</button>
                             </div>
                         `).join('')
                     }
@@ -702,8 +659,76 @@ function renderPillarGrid() {
     }).join('');
 }
 
+function renderTop3() {
+    const el = document.getElementById('top3-list');
+    const countEl = document.getElementById('top3-count');
+    const starred = data.tasks.filter(t => t.todayStar && !t.done);
+    countEl.textContent = starred.length + '/3';
+    
+    if (starred.length === 0) {
+        el.innerHTML = '<div class="top3-empty">Clique sur ★ pour marquer tes priorités</div>';
+        return;
+    }
+    
+    const getColor = (type) => {
+        if (type === 'pro') return 'var(--pro-blue)';
+        if (type === 'saas') return 'var(--saas-green)';
+        if (type === 'vie') return 'var(--vie-pink)';
+        return 'var(--patri-purple)';
+    };
+    
+    el.innerHTML = starred.map(t => `
+        <div class="task-row">
+            <input type="checkbox" class="task-check" onclick="event.stopPropagation(); toggleTask(${t.id})">
+            <span class="task-type-dot" style="background:${getColor(t.type)}"></span>
+            <span class="task-content" onclick="startFocusOnTask(${t.id})">${escapeHtml(t.text)}</span>
+            <button class="task-star active" onclick="event.stopPropagation(); toggleStar(${t.id})">★</button>
+        </div>
+    `).join('');
+}
+
+function renderTable(elementId, type) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const tasks = data.tasks.filter(t => t.type === type);
+    tasks.sort((a, b) => a.done - b.done);
+
+    el.innerHTML = tasks.map(t => `
+        <tr class="${t.done ? 'task-done' : ''}">
+            <td><input type="checkbox" class="task-check" style="margin:0" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})"></td>
+            <td style="${t.done ? 'text-decoration:line-through; color:var(--text-dim);' : ''}">${escapeHtml(t.text)}</td>
+            <td><button class="task-star ${t.todayStar ? 'active' : ''}" onclick="toggleStar(${t.id})">★</button></td>
+            <td><button onclick="deleteTask(${t.id})" class="task-delete">✕</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderProjectList(elementId, type) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const tasks = data.tasks.filter(t => t.type === type);
+    tasks.sort((a, b) => a.done - b.done);
+
+    el.innerHTML = tasks.map(t => `
+        <div class="task-row ${t.done ? 'task-done' : ''}">
+            <input type="checkbox" class="task-check" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})">
+            <span class="task-content">${escapeHtml(t.text)}</span>
+            <button class="task-star ${t.todayStar ? 'active' : ''}" onclick="toggleStar(${t.id})">★</button>
+            <button class="task-delete" onclick="deleteTask(${t.id})">✕</button>
+        </div>
+    `).join('');
+}
+
+function renderJournal() {
+    const el = document.getElementById('journal-entries');
+    const today = new Date().toDateString();
+    const todayEntries = data.journal.filter(j => j.date === today);
+    if (todayEntries.length === 0) { el.innerHTML = '<div style="color:var(--text-dim); font-size:0.7rem; padding:10px 0; font-style:italic;">Aucune entrée aujourd\'hui.</div>'; return; }
+    el.innerHTML = todayEntries.map(j => `<div class="journal-entry"><span class="journal-time">[${j.time}]</span><span class="journal-text">${escapeHtml(j.text)}</span></div>`).join('');
+}
+
 // ===============================================
-// TASKS
+// LOGIC
 // ===============================================
 function addTask(type, text, priority = 'M') {
     data.tasks.unshift({
@@ -744,158 +769,6 @@ function addProjectTask(type) {
     if (input && input.value.trim()) { addTask(type, input.value.trim()); input.value = ''; }
 }
 
-// ===============================================
-// AI IMPORT LOGIC
-// ===============================================
-function openAiImport() {
-    document.getElementById('ai-import-modal').classList.add('show');
-}
-
-function copyAgentPrompt() {
-    navigator.clipboard.writeText(AGENT_PROMPT.trim()).then(function() {
-        const btn = document.querySelector('.copy-prompt-btn');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "✅ PROMPT COPIÉ !";
-        setTimeout(() => { btn.innerHTML = originalText; }, 2000);
-    }, function(err) {
-        alert('Erreur de copie. Sélectionnez le texte manuellement.');
-    });
-}
-
-function processAiImport() {
-    const raw = document.getElementById('ai-import-text').value;
-    try {
-        // Nettoyage basique si l'utilisateur colle du markdown ```json ... ```
-        const cleanRaw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
-        const importedTasks = JSON.parse(cleanRaw);
-        
-        if(!Array.isArray(importedTasks)) throw new Error("Format incorrect");
-        
-        let count = 0;
-        importedTasks.forEach(t => {
-            if(t.text && t.type) {
-                addTask(t.type, t.text, t.priority || 'M');
-                count++;
-            }
-        });
-        
-        document.getElementById('ai-import-text').value = '';
-        document.getElementById('ai-import-modal').classList.remove('show');
-        alert(count + " tâches importées avec succès !");
-    } catch(e) {
-        alert("Erreur : Le texte collé n'est pas un JSON valide. Demandez à l'IA de corriger.");
-    }
-}
-
-// ===============================================
-// CRISIS MODE
-// ===============================================
-function toggleCrisisMode() {
-    data.settings.crisisMode = !data.settings.crisisMode;
-    saveData();
-    updateCrisisUI();
-}
-
-function updateCrisisUI() {
-    const header = document.getElementById('main-header');
-    const crisisTag = document.getElementById('crisis-tag');
-    const btnCrisis = document.getElementById('btn-crisis');
-    if (data.settings.crisisMode) {
-        header.classList.add('crisis-active');
-        crisisTag.classList.remove('hidden');
-        btnCrisis.classList.add('active');
-    } else {
-        header.classList.remove('crisis-active');
-        crisisTag.classList.add('hidden');
-        btnCrisis.classList.remove('active');
-    }
-}
-
-// ===============================================
-// RENDER ALL
-// ===============================================
-function renderAll() {
-    renderTop3();
-    renderPillarGrid();
-    renderTable('table-pro-body', 'pro');
-    renderTable('table-saas-body', 'saas');
-    renderTable('table-vie-body', 'vie');
-    renderProjectList('list-annaba', 'annaba');
-    renderProjectList('list-copro', 'copro');
-    renderProjectList('list-airbnb', 'airbnb');
-    renderProjectList('list-maison', 'maison');
-
-    document.getElementById('input-mrr').value = data.metrics.mrr;
-    document.getElementById('input-users').value = data.metrics.users;
-
-    if (document.getElementById('date-annaba')) document.getElementById('date-annaba').value = data.settings.annabaDate || '';
-    if (document.getElementById('date-copro')) document.getElementById('date-copro').value = data.settings.coproDate || '';
-
-    updateProjectProgress('annaba');
-    updateProjectProgress('copro');
-    renderJournal();
-}
-
-function renderTop3() {
-    const el = document.getElementById('top3-list');
-    const countEl = document.getElementById('top3-count');
-    const starred = data.tasks.filter(t => t.todayStar && !t.done);
-    countEl.textContent = starred.length + '/3';
-    
-    if (starred.length === 0) {
-        el.innerHTML = '<div class="top3-empty">Clique sur ⭐ pour marquer tes priorités</div>';
-        return;
-    }
-    
-    const getColor = (type) => {
-        if (type === 'pro') return 'var(--pro-blue)';
-        if (type === 'saas') return 'var(--saas-green)';
-        if (type === 'vie') return 'var(--vie-pink)';
-        return 'var(--patri-purple)';
-    };
-    
-    el.innerHTML = starred.map(t => `
-        <div class="task-row" data-id="${t.id}">
-            <input type="checkbox" class="task-check" onclick="event.stopPropagation(); toggleTask(${t.id})">
-            <span class="task-type-dot" style="background:${getColor(t.type)}"></span>
-            <span class="task-content" onclick="startFocusOnTask(${t.id})" style="cursor:pointer;">${escapeHtml(t.text)}</span>
-            <button class="task-star active" onclick="event.stopPropagation(); toggleStar(${t.id})">⭐</button>
-        </div>
-    `).join('');
-}
-
-function renderTable(elementId, type) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    const tasks = data.tasks.filter(t => t.type === type);
-    tasks.sort((a, b) => a.done - b.done);
-
-    el.innerHTML = tasks.map(t => `
-        <tr class="${t.done ? 'task-done' : ''}">
-            <td><input type="checkbox" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})" style="cursor:pointer;"></td>
-            <td style="${t.done ? 'text-decoration:line-through; color:var(--text-muted);' : ''}">${escapeHtml(t.text)}</td>
-            <td><button class="task-star ${t.todayStar ? 'active' : ''}" onclick="toggleStar(${t.id})">${t.todayStar ? '⭐' : '☆'}</button></td>
-            <td><button onclick="deleteTask(${t.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;">🗑</button></td>
-        </tr>
-    `).join('');
-}
-
-function renderProjectList(elementId, type) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    const tasks = data.tasks.filter(t => t.type === type);
-    tasks.sort((a, b) => a.done - b.done);
-
-    el.innerHTML = tasks.map(t => `
-        <div class="task-row ${t.done ? 'task-done' : ''}">
-            <input type="checkbox" class="task-check" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})">
-            <span class="task-content">${escapeHtml(t.text)}</span>
-            <button class="task-star ${t.todayStar ? 'active' : ''}" onclick="toggleStar(${t.id})">${t.todayStar ? '⭐' : '☆'}</button>
-            <button class="task-delete" onclick="deleteTask(${t.id})">✕</button>
-        </div>
-    `).join('');
-}
-
 function updateProjectProgress(type) {
     const tasks = data.tasks.filter(t => t.type === type);
     const done = tasks.filter(t => t.done).length;
@@ -911,16 +784,6 @@ function updateMetrics() {
     saveData();
 }
 
-// ===============================================
-// JOURNAL
-// ===============================================
-function toggleJournal() {
-    const body = document.getElementById('journal-body');
-    const toggle = document.getElementById('journal-toggle');
-    body.classList.toggle('expanded');
-    toggle.textContent = body.classList.contains('expanded') ? '▲ Masquer' : '▼ Afficher';
-}
-
 function addJournalEntry(autoText = null) {
     const input = document.getElementById('journal-input');
     const text = autoText || input.value.trim();
@@ -931,12 +794,11 @@ function addJournalEntry(autoText = null) {
     saveData();
 }
 
-function renderJournal() {
-    const el = document.getElementById('journal-entries');
-    const today = new Date().toDateString();
-    const todayEntries = data.journal.filter(j => j.date === today);
-    if (todayEntries.length === 0) { el.innerHTML = '<div style="color:var(--text-muted); font-size:0.7rem; padding:6px 0;">Aucune entrée.</div>'; return; }
-    el.innerHTML = todayEntries.map(j => `<div class="journal-entry"><span class="journal-time">[${j.time}]</span><span class="journal-text">${escapeHtml(j.text)}</span></div>`).join('');
+function toggleJournal() {
+    const body = document.getElementById('journal-body');
+    const toggle = document.getElementById('journal-toggle');
+    body.classList.toggle('expanded');
+    toggle.textContent = body.classList.contains('expanded') ? '▲ Masquer' : '▼ Afficher';
 }
 
 function cleanJournalIfNewDay() {
@@ -944,9 +806,6 @@ function cleanJournalIfNewDay() {
     saveData();
 }
 
-// ===============================================
-// WEEKLY REVIEW
-// ===============================================
 function saveReview() {
     data.review.win = document.getElementById('review-win').value;
     data.review.fail = document.getElementById('review-fail').value;
@@ -990,101 +849,110 @@ function renderWeekGrid() {
     `).join('');
 }
 
-// ===============================================
-// FOCUS MODE
-// ===============================================
-let focusModeActive = false, focusTimerInterval = null, focusSeconds = 0, currentFocusTaskId = null;
+function renderAll() {
+    renderTop3();
+    renderPillarGrid();
+    renderTable('table-pro-body', 'pro');
+    renderTable('table-saas-body', 'saas');
+    renderTable('table-vie-body', 'vie');
+    renderProjectList('list-annaba', 'annaba');
+    renderProjectList('list-copro', 'copro');
+    renderProjectList('list-airbnb', 'airbnb');
+    renderProjectList('list-maison', 'maison');
 
-function startFocusOnTask(taskId) {
-    const task = data.tasks.find(t => t.id === taskId);
-    if (!task || task.done) return;
-    currentFocusTaskId = taskId;
-    document.getElementById('focus-task-text').textContent = task.text;
-    const colors = { pro: 'var(--pro-blue)', saas: 'var(--saas-green)', vie: 'var(--vie-pink)' };
-    document.getElementById('focus-type-label').textContent = task.type.toUpperCase();
-    document.getElementById('focus-type-label').style.color = colors[task.type] || 'var(--patri-purple)';
-    focusSeconds = 0;
-    document.getElementById('focus-timer-display').textContent = '00:00';
-    document.getElementById('focus-toggle-btn').textContent = '▶ Timer';
-    document.getElementById('focus-overlay').classList.add('show');
-    document.getElementById('btn-focus').classList.add('focus-active');
-    document.getElementById('timer-float').classList.add('hidden');
-    focusModeActive = true;
-}
+    document.getElementById('input-mrr').value = data.metrics.mrr;
+    document.getElementById('input-users').value = data.metrics.users;
+    if (document.getElementById('date-annaba')) document.getElementById('date-annaba').value = data.settings.annabaDate || '';
+    if (document.getElementById('date-copro')) document.getElementById('date-copro').value = data.settings.coproDate || '';
 
-function toggleFocusMode() {
-    if (focusModeActive) { exitFocusMode(); return; }
-    let task = data.tasks.find(t => t.todayStar && !t.done);
-    if (!task) task = data.tasks.find(t => !t.done && ['pro', 'saas', 'vie'].includes(t.type));
-    if (task) startFocusOnTask(task.id); else alert('Aucune tâche active !');
-}
-
-function exitFocusMode() {
-    document.getElementById('focus-overlay').classList.remove('show');
-    document.getElementById('btn-focus').classList.remove('focus-active');
-    document.getElementById('timer-float').classList.remove('hidden');
-    focusModeActive = false; currentFocusTaskId = null;
-    clearInterval(focusTimerInterval); focusTimerInterval = null; focusSeconds = 0;
-}
-
-function completeFocusTask() {
-    if (!currentFocusTaskId) return;
-    const task = data.tasks.find(t => t.id === currentFocusTaskId);
-    if (task) { task.done = true; task.todayStar = false; addJournalEntry(`✓ ${task.text}`); saveData(); }
-    nextFocusTask();
-}
-
-function nextFocusTask() {
-    clearInterval(focusTimerInterval); focusTimerInterval = null; focusSeconds = 0;
-    document.getElementById('focus-timer-display').textContent = '00:00';
-    document.getElementById('focus-toggle-btn').textContent = '▶ Timer';
-    let next = data.tasks.find(t => t.todayStar && !t.done && t.id !== currentFocusTaskId);
-    if (!next) next = data.tasks.find(t => !t.done && ['pro', 'saas', 'vie'].includes(t.type) && t.id !== currentFocusTaskId);
-    if (next) startFocusOnTask(next.id);
-    else { document.getElementById('focus-task-text').textContent = '🎉 Tout est terminé !'; document.getElementById('focus-type-label').textContent = 'BRAVO'; currentFocusTaskId = null; }
-}
-
-function toggleFocusTimer() {
-    const btn = document.getElementById('focus-toggle-btn');
-    if (focusTimerInterval) { clearInterval(focusTimerInterval); focusTimerInterval = null; btn.textContent = '▶ Reprendre'; }
-    else { focusTimerInterval = setInterval(() => { focusSeconds++; const m = String(Math.floor(focusSeconds/60)).padStart(2,'0'), s = String(focusSeconds%60).padStart(2,'0'); document.getElementById('focus-timer-display').textContent = m+':'+s; }, 1000); btn.textContent = '⏸ Pause'; }
+    updateProjectProgress('annaba');
+    updateProjectProgress('copro');
+    renderJournal();
 }
 
 // ===============================================
-// TIMER
+// IMPORT IA
 // ===============================================
-let timerInterval = null, timerSeconds = 0, isTimerRunning = false;
-function toggleTimer() {
-    const btn = document.getElementById('btn-timer-toggle'), tf = document.getElementById('timer-float');
-    if (isTimerRunning) { clearInterval(timerInterval); isTimerRunning = false; btn.textContent = '▶'; btn.classList.remove('active'); tf.classList.remove('active'); }
-    else { timerInterval = setInterval(() => { timerSeconds++; document.getElementById('timer-display').textContent = String(Math.floor(timerSeconds/60)).padStart(2,'0')+':'+String(timerSeconds%60).padStart(2,'0'); }, 1000); isTimerRunning = true; btn.textContent = '⏸'; btn.classList.add('active'); tf.classList.add('active'); }
+function openAiImport() { document.getElementById('ai-import-modal').classList.add('show'); }
+function copyAgentPrompt() {
+    navigator.clipboard.writeText(AGENT_PROMPT.trim()).then(function() {
+        const btn = document.querySelector('.copy-prompt-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "✅ PROMPT COPIÉ !";
+        setTimeout(() => { btn.innerHTML = originalText; }, 2000);
+    });
 }
-function resetTimer() { clearInterval(timerInterval); isTimerRunning = false; timerSeconds = 0; document.getElementById('timer-display').textContent = '00:00'; document.getElementById('btn-timer-toggle').textContent = '▶'; document.getElementById('btn-timer-toggle').classList.remove('active'); document.getElementById('timer-float').classList.remove('active'); }
+function processAiImport() {
+    const raw = document.getElementById('ai-import-text').value;
+    try {
+        const cleanRaw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+        const importedTasks = JSON.parse(cleanRaw);
+        if(!Array.isArray(importedTasks)) throw new Error("Format incorrect");
+        
+        let count = 0;
+        importedTasks.forEach(t => { if(t.text && t.type) { addTask(t.type, t.text, t.priority || 'M'); count++; } });
+        
+        document.getElementById('ai-import-text').value = '';
+        document.getElementById('ai-import-modal').classList.remove('show');
+        alert(count + " tâches importées !");
+    } catch(e) { alert("Erreur : JSON invalide."); }
+}
 
 // ===============================================
-// CLOCK & SHUTDOWN
+// UI UTILS
 // ===============================================
 function updateClock() { document.getElementById('clock').textContent = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); }
 function checkShutdownTime() { const n = new Date(); if (n.getHours() === 22 && n.getMinutes() === 45) openShutdown(); }
 function openShutdown() { document.getElementById('shutdown-modal').classList.add('show'); }
 function closeShutdown() { document.getElementById('shutdown-modal').classList.remove('show'); }
-
-// ===============================================
-// NAV
-// ===============================================
 function switchTab(viewId, btn) {
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
     document.getElementById('view-' + viewId).classList.add('active');
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     if (btn) btn.classList.add('active');
 }
+function toggleCrisisMode() { data.settings.crisisMode = !data.settings.crisisMode; saveData(); updateCrisisUI(); }
+function updateCrisisUI() {
+    const header = document.getElementById('main-header');
+    const crisisTag = document.getElementById('crisis-tag');
+    const btnCrisis = document.getElementById('btn-crisis');
+    if (data.settings.crisisMode) { header.classList.add('crisis-active'); crisisTag.classList.remove('hidden'); btnCrisis.classList.add('active'); } 
+    else { header.classList.remove('crisis-active'); crisisTag.classList.add('hidden'); btnCrisis.classList.remove('active'); }
+}
+function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+function exportData() { const a = document.createElement('a'); a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2)); a.download = 'huzine_os_' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); }
+function importData(input) { const f = input.files[0]; if (!f) return; const r = new FileReader(); r.onload = e => { try { data = JSON.parse(e.target.result); saveData(); alert('Restauré !'); location.reload(); } catch { alert('Fichier invalide'); } }; r.readAsText(f); }
 
 // ===============================================
-// EXPORT/IMPORT
+// FOCUS & TIMER
 // ===============================================
-function exportData() { const a = document.createElement('a'); a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2)); a.download = 'huzine_v5_' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); }
-function importData(input) { const f = input.files[0]; if (!f) return; const r = new FileReader(); r.onload = e => { try { data = JSON.parse(e.target.result); saveData(); alert('Restauré !'); location.reload(); } catch { alert('Fichier invalide'); } }; r.readAsText(f); }
-function escapeHtml(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+let focusModeActive = false, focusTimerInterval = null, focusSeconds = 0, currentFocusTaskId = null;
+function startFocusOnTask(taskId) {
+    const task = data.tasks.find(t => t.id === taskId);
+    if (!task || task.done) return;
+    currentFocusTaskId = taskId;
+    document.getElementById('focus-task-text').textContent = task.text;
+    document.getElementById('focus-type-label').textContent = task.type.toUpperCase();
+    focusSeconds = 0;
+    document.getElementById('focus-timer-display').textContent = '00:00';
+    document.getElementById('focus-toggle-btn').textContent = '▶ Timer';
+    document.getElementById('focus-overlay').classList.add('show');
+    focusModeActive = true;
+}
+function toggleFocusMode() {
+    if (focusModeActive) { exitFocusMode(); return; }
+    let task = data.tasks.find(t => t.todayStar && !t.done);
+    if (!task) task = data.tasks.find(t => !t.done && ['pro', 'saas', 'vie'].includes(t.type));
+    if (task) startFocusOnTask(task.id); else alert('Aucune tâche active !');
+}
+function exitFocusMode() { document.getElementById('focus-overlay').classList.remove('show'); focusModeActive = false; currentFocusTaskId = null; clearInterval(focusTimerInterval); focusTimerInterval = null; }
+function completeFocusTask() { if (currentFocusTaskId) { const task = data.tasks.find(t => t.id === currentFocusTaskId); if (task) { task.done = true; task.todayStar = false; addJournalEntry(`✓ ${task.text}`); saveData(); } nextFocusTask(); } }
+function nextFocusTask() { clearInterval(focusTimerInterval); focusTimerInterval = null; focusSeconds = 0; let next = data.tasks.find(t => t.todayStar && !t.done && t.id !== currentFocusTaskId); if (!next) next = data.tasks.find(t => !t.done && t.id !== currentFocusTaskId); if (next) startFocusOnTask(next.id); else { document.getElementById('focus-task-text').textContent = '🎉 Tout est terminé !'; currentFocusTaskId = null; } }
+function toggleFocusTimer() { const btn = document.getElementById('focus-toggle-btn'); if (focusTimerInterval) { clearInterval(focusTimerInterval); focusTimerInterval = null; btn.textContent = '▶ Reprendre'; } else { focusTimerInterval = setInterval(() => { focusSeconds++; const m = String(Math.floor(focusSeconds/60)).padStart(2,'0'), s = String(focusSeconds%60).padStart(2,'0'); document.getElementById('focus-timer-display').textContent = m+':'+s; }, 1000); btn.textContent = '⏸ Pause'; } }
+
+let timerInterval = null, timerSeconds = 0, isTimerRunning = false;
+function toggleTimer() { const btn = document.getElementById('btn-timer-toggle'), tf = document.getElementById('timer-float'); if (isTimerRunning) { clearInterval(timerInterval); isTimerRunning = false; btn.textContent = '▶'; tf.classList.remove('active'); } else { timerInterval = setInterval(() => { timerSeconds++; document.getElementById('timer-display').textContent = String(Math.floor(timerSeconds/60)).padStart(2,'0')+':'+String(timerSeconds%60).padStart(2,'0'); }, 1000); isTimerRunning = true; btn.textContent = '⏸'; tf.classList.add('active'); } }
+function resetTimer() { clearInterval(timerInterval); isTimerRunning = false; timerSeconds = 0; document.getElementById('timer-display').textContent = '00:00'; document.getElementById('btn-timer-toggle').textContent = '▶'; document.getElementById('timer-float').classList.remove('active'); }
 
 init();
 </script>
