@@ -27,7 +27,7 @@
             --saas-green: #0D9F6E;
             --patri-purple: #7C3AED;
             --vie-pink: #DB2777;
-            --office-orange: #F97316; /* Mode Bureau */
+            --office-orange: #F97316;
             
             --star-gold: #F59E0B;
             --star-gold-glow: rgba(245, 158, 11, 0.2);
@@ -541,7 +541,6 @@ const defaultData = {
 
 let data = JSON.parse(localStorage.getItem('huzine_os_hybrid')) || JSON.parse(JSON.stringify(defaultData));
 
-// Clean up old data structure if needed
 if (!data.dailyProgress) { 
     data.dailyProgress = { pro: 0, saas: 0, patri: 0, vie: 0, lastReset: new Date().toDateString() };
 }
@@ -589,7 +588,7 @@ function saveData() {
     if (dateAnnaba) data.settings.annabaDate = dateAnnaba.value;
     if (dateCopro) data.settings.coproDate = dateCopro.value;
     localStorage.setItem('huzine_os_hybrid', JSON.stringify(data));
-    renderAll();
+    // Not calling renderAll here to avoid infinite loops in some contexts
 }
 
 function setupDay() {
@@ -745,8 +744,27 @@ function renderJournal() {
     el.innerHTML = todayEntries.map(j => `<div class="journal-entry"><span class="journal-time">[${j.time}]</span><span class="journal-text">${escapeHtml(j.text)}</span></div>`).join('');
 }
 
+function renderAll() {
+    renderTop3();
+    renderPillarGrid();
+    renderTable('table-pro-body', 'pro');
+    renderTable('table-saas-body', 'saas');
+    renderTable('table-vie-body', 'vie');
+    renderProjectList('list-annaba', 'annaba');
+    renderProjectList('list-copro', 'copro');
+    renderProjectList('list-airbnb', 'airbnb');
+    renderProjectList('list-maison', 'maison');
+
+    document.getElementById('input-mrr').value = data.metrics.mrr;
+    document.getElementById('input-users').value = data.metrics.users;
+    if (document.getElementById('date-annaba')) document.getElementById('date-annaba').value = data.settings.annabaDate || '';
+    if (document.getElementById('date-copro')) document.getElementById('date-copro').value = data.settings.coproDate || '';
+
+    renderJournal();
+}
+
 // ===============================================
-// LOGIC
+// LOGIC (UPDATED WITH T-SHIRT SIZING & FIXES)
 // ===============================================
 function getTaskDuration(text) {
     const match = text.match(/\((\d+)\)/);
@@ -761,6 +779,7 @@ function addTask(type, text, priority = 'M') {
         todayStar: false, createdAt: new Date().toISOString()
     });
     saveData();
+    renderAll();
 }
 
 function toggleTask(id, pillarKey) {
@@ -776,12 +795,24 @@ function toggleTask(id, pillarKey) {
             data.dailyProgress[pillarKey] = Math.max(0, (data.dailyProgress[pillarKey] || 0) - duration);
         }
         saveData(); 
+        renderAll();
     }
 }
 
 function deleteTask(id) {
-    data.tasks = data.tasks.filter(t => t.id !== id);
-    saveData();
+    const task = data.tasks.find(t => t.id === id);
+    if (task) {
+        // FIX: If task was done, subtract time before deleting
+        if (task.done) {
+            const duration = getTaskDuration(task.text);
+            const pillarKey = getPillarKey(task.type);
+            data.dailyProgress[pillarKey] = Math.max(0, (data.dailyProgress[pillarKey] || 0) - duration);
+        }
+        // Remove from array
+        data.tasks = data.tasks.filter(t => t.id !== id);
+        saveData();
+        renderAll();
+    }
 }
 
 function toggleStar(id) {
@@ -792,6 +823,7 @@ function toggleStar(id) {
     else if (currentStars < 3) { task.todayStar = true; }
     else { alert('Max 3 tâches TOP !'); return; }
     saveData();
+    renderAll();
 }
 
 function addNewTask(type) {
@@ -818,6 +850,7 @@ function addJournalEntry(autoText = null) {
     data.journal.unshift({ time: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }), text, date: now.toDateString() });
     if (!autoText) input.value = '';
     saveData();
+    renderAll();
 }
 
 function toggleJournal() {
@@ -854,6 +887,7 @@ function createTaskFromPriority() {
     const task = data.tasks.find(t => t.text === priority && !t.done);
     if (task) task.todayStar = true;
     saveData();
+    renderAll();
     alert('Tâche créée et marquée TOP 3 !');
 }
 
@@ -873,25 +907,6 @@ function renderWeekGrid() {
             <div class="week-day-theme">${d.theme}</div>
         </div>
     `).join('');
-}
-
-function renderAll() {
-    renderTop3();
-    renderPillarGrid();
-    renderTable('table-pro-body', 'pro');
-    renderTable('table-saas-body', 'saas');
-    renderTable('table-vie-body', 'vie');
-    renderProjectList('list-annaba', 'annaba');
-    renderProjectList('list-copro', 'copro');
-    renderProjectList('list-airbnb', 'airbnb');
-    renderProjectList('list-maison', 'maison');
-
-    document.getElementById('input-mrr').value = data.metrics.mrr;
-    document.getElementById('input-users').value = data.metrics.users;
-    if (document.getElementById('date-annaba')) document.getElementById('date-annaba').value = data.settings.annabaDate || '';
-    if (document.getElementById('date-copro')) document.getElementById('date-copro').value = data.settings.coproDate || '';
-
-    renderJournal();
 }
 
 // ===============================================
