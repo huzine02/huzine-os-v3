@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HUZINE OS // ULTIMATE</title>
+    <title>HUZINE OS // HYBRID BUILDER</title>
     
     <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,6 +31,7 @@
             --patri-purple-dim: rgba(124, 58, 237, 0.15);
             --vie-pink: #DB2777;
             --vie-pink-dim: rgba(219, 39, 119, 0.15);
+            --office-orange: #F97316; /* NEW: Pour le mode Bureau */
             
             --star-gold: #F59E0B;
             --star-gold-glow: rgba(245, 158, 11, 0.2);
@@ -76,18 +77,10 @@
         ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 
         /* --- ANIMATIONS --- */
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(16px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; } to { opacity: 1; }
-        }
-        @keyframes pulseSoft {
-            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-            50% { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1); }
-            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
-        }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulseSoft { 0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } 50% { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.1); } 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); } }
+        @keyframes pulseOffice { 0% { opacity: 0.8; } 50% { opacity: 1; box-shadow: 0 0 15px rgba(249, 115, 22, 0.1); } 100% { opacity: 0.8; } }
 
         /* --- HEADER --- */
         header#main-header {
@@ -115,6 +108,18 @@
         }
         .brand span { color: var(--text-dim); font-weight: 400; }
         
+        /* NEW: OFFICE MODE TAG */
+        .office-tag { 
+            display: none; /* Hidden by default */
+            background: rgba(249, 115, 22, 0.15); 
+            color: var(--office-orange);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            font-size: 0.65rem; padding: 4px 10px; border-radius: 6px; font-weight: 700;
+            align-items: center; gap: 6px;
+            animation: pulseOffice 3s infinite;
+        }
+        .office-tag.active { display: flex; }
+
         .crisis-tag { 
             background: rgba(220, 38, 38, 0.15); 
             color: var(--alert-red); 
@@ -274,7 +279,7 @@
         }
         .greeting span { color: var(--text-main); font-weight: 600; }
 
-        /* --- TOP 3 CARD (PREMIUM) --- */
+        /* --- TOP 3 CARD --- */
         .top3-card {
             background: linear-gradient(180deg, rgba(20, 23, 28, 0.6), rgba(10, 12, 16, 0.9));
             backdrop-filter: blur(20px);
@@ -352,28 +357,11 @@
             border-color: var(--border-hover);
         }
 
-        /* Pillar States */
-        .pillar-card.focus { 
-            border-color: var(--theme); 
-            box-shadow: 0 8px 30px -5px rgba(0,0,0,0.4), 0 0 0 1px var(--theme); 
-        }
-        .pillar-card.medium { opacity: 0.95; }
-        .pillar-card.light { opacity: 0.7; filter: grayscale(0.3); }
-        .pillar-card.faded { opacity: 0.5; filter: grayscale(0.6); }
-        
-        .pillar-focus-tag { 
-            position: absolute; 
-            top: 16px; right: 16px; 
-            background: var(--theme); 
-            color: #fff; 
-            font-size: 0.6rem; 
-            font-weight: 700; 
-            padding: 4px 10px; 
-            border-radius: 100px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            letter-spacing: 0.05em;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-        }
+        /* NEW: BUDGET BAR STYLES */
+        .budget-container { margin-bottom: 12px; margin-top: -8px; }
+        .budget-labels { display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--text-dim); margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+        .budget-track { width: 100%; height: 4px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+        .budget-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
 
         .pillar-header { 
             display: flex; 
@@ -390,14 +378,6 @@
             display: flex; align-items: center; gap: 10px; 
             letter-spacing: -0.01em;
         }
-        .pillar-badge { 
-            font-family: 'JetBrains Mono', monospace; 
-            font-size: 0.7rem; 
-            padding: 3px 8px; 
-            border-radius: 6px; 
-            background: rgba(255,255,255,0.04); 
-            color: var(--text-muted); 
-        }
         .pillar-tasks { flex: 1; display: flex; flex-direction: column; gap: 4px; }
 
         /* TASKS REFINED */
@@ -410,11 +390,7 @@
             border: 1px solid transparent; 
             cursor: pointer;
         }
-        .task-row:hover { 
-            background: rgba(255,255,255,0.03); 
-            border-color: rgba(255,255,255,0.05); 
-        }
-        
+        .task-row:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.05); }
         .task-check { 
             appearance: none; 
             width: 18px; height: 18px; 
@@ -427,84 +403,22 @@
             transition: all 0.2s;
             background: transparent;
         }
-        .task-check:checked { 
-            background: var(--saas-green); 
-            border-color: var(--saas-green); 
-            box-shadow: 0 0 10px var(--saas-green-dim);
-        }
-        .task-check:checked::after { 
-            content: ''; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; 
-            border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); 
-        }
-        .task-check:hover { border-color: var(--text-muted); }
-
-        .task-content { 
-            flex: 1; 
-            font-size: 0.9rem; 
-            color: var(--text-main); 
-            transition: color 0.2s; 
-            font-weight: 400;
-        }
-        .task-done .task-content { 
-            text-decoration: line-through; 
-            color: var(--text-dim); 
-            opacity: 0.7;
-        }
-        
-        .task-type-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            margin-right: 12px; flex-shrink: 0;
-            box-shadow: 0 0 8px currentColor;
-        }
-
-        .task-star { 
-            background: none; border: none; cursor: pointer; 
-            font-size: 1.1rem; color: var(--text-dim); 
-            opacity: 0.3; margin-left: 10px; transition: all 0.2s; 
-        }
+        .task-check:checked { background: var(--saas-green); border-color: var(--saas-green); box-shadow: 0 0 10px var(--saas-green-dim); }
+        .task-check:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 4px; height: 9px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+        .task-content { flex: 1; font-size: 0.9rem; color: var(--text-main); transition: color 0.2s; font-weight: 400; }
+        .task-done .task-content { text-decoration: line-through; color: var(--text-dim); opacity: 0.7; }
+        .task-type-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 12px; flex-shrink: 0; box-shadow: 0 0 8px currentColor; }
+        .task-star { background: none; border: none; cursor: pointer; font-size: 1.1rem; color: var(--text-dim); opacity: 0.3; margin-left: 10px; transition: all 0.2s; }
         .task-row:hover .task-star { opacity: 1; }
-        .task-star.active { 
-            color: var(--star-gold); 
-            opacity: 1; 
-            transform: scale(1.1); 
-            text-shadow: 0 0 10px var(--star-gold-glow);
-        }
-        
-        .task-delete { 
-            background: none; border: none; 
-            color: var(--alert-red); 
-            cursor: pointer; opacity: 0; 
-            margin-left: 10px; transition: all 0.2s; 
-        }
+        .task-star.active { color: var(--star-gold); opacity: 1; transform: scale(1.1); text-shadow: 0 0 10px var(--star-gold-glow); }
+        .task-delete { background: none; border: none; color: var(--alert-red); cursor: pointer; opacity: 0; margin-left: 10px; transition: all 0.2s; }
         .task-row:hover .task-delete { opacity: 0.6; }
         .task-delete:hover { opacity: 1; transform: scale(1.1); }
-        
-        .add-task-btn { 
-            width: 100%; padding: 12px; margin-top: 16px; 
-            background: rgba(255,255,255,0.02); 
-            border: 1px dashed var(--border-subtle); 
-            color: var(--text-muted); 
-            cursor: pointer; 
-            border-radius: var(--radius-sm); 
-            font-size: 0.8rem; 
-            transition: all 0.2s; 
-            font-weight: 500; 
-        }
-        .add-task-btn:hover { 
-            background: rgba(255,255,255,0.05); 
-            border-color: var(--text-muted); 
-            color: var(--text-main); 
-        }
+        .add-task-btn { width: 100%; padding: 12px; margin-top: 16px; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); color: var(--text-muted); cursor: pointer; border-radius: var(--radius-sm); font-size: 0.8rem; transition: all 0.2s; font-weight: 500; }
+        .add-task-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--text-muted); color: var(--text-main); }
 
         /* JOURNAL & PROJECTS */
-        .journal-section, .project-card { 
-            background: var(--bg-glass); 
-            border: 1px solid var(--border-subtle); 
-            border-radius: var(--radius-md); 
-            overflow: hidden; 
-            margin-top: 32px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
+        .journal-section, .project-card { background: var(--bg-glass); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow: hidden; margin-top: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .journal-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
         .journal-header:hover { background: rgba(255,255,255,0.02); }
         .journal-title { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
@@ -530,7 +444,7 @@
         .timeline-track { background: rgba(255,255,255,0.05); height: 6px; border-radius: 10px; margin: 16px 0 24px; overflow: hidden; }
         .timeline-bar { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--pro-blue), var(--saas-green)); box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); transition: width 0.5s ease; }
 
-        /* FOCUS OVERLAY - LINEAR STYLE */
+        /* FOCUS OVERLAY */
         .focus-overlay { 
             background: linear-gradient(180deg, #050505 0%, #0A0C10 100%);
             position: fixed; inset: 0; z-index: 9999;
@@ -538,115 +452,41 @@
             opacity: 0; transition: opacity 0.3s ease;
         }
         .focus-overlay.show { display: flex; opacity: 1; animation: fadeIn 0.4s ease forwards; }
-        
-        /* Noise texture via CSS gradient approximation */
-        .focus-overlay::before {
-            content: ""; position: absolute; inset: 0; 
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: -1;
-        }
-
-        .focus-type { 
-            color: var(--pro-blue); 
-            font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; 
-            margin-bottom: 24px; text-transform: uppercase;
-            background: rgba(37, 99, 235, 0.1); padding: 6px 16px; border-radius: 100px;
-            border: 1px solid rgba(37, 99, 235, 0.2);
-        }
-        .focus-task { 
-            font-size: 2.5rem; font-weight: 600; 
-            text-align: center; max-width: 800px; margin-bottom: 32px; 
-            line-height: 1.3; color: #fff;
-            text-shadow: 0 0 30px rgba(255,255,255,0.1);
-            letter-spacing: -0.02em;
-        }
-        .focus-timer { 
-            font-size: 3rem; color: var(--text-muted); 
-            font-weight: 400; margin-bottom: 48px; 
-            font-family: 'JetBrains Mono', monospace; 
-            opacity: 0.8;
-        }
-        
-        .focus-btn { 
-            padding: 16px 40px; border-radius: 100px; 
-            font-size: 1rem; border:none; cursor: pointer; 
-            transition: all 0.2s var(--ease-spring);
-            font-weight: 600; letter-spacing: 0.02em;
-        }
-        .focus-btn.primary { 
-            background: var(--text-main); color: #000; 
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
+        .focus-overlay::before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E"); pointer-events: none; z-index: -1; }
+        .focus-type { color: var(--pro-blue); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.15em; margin-bottom: 24px; text-transform: uppercase; background: rgba(37, 99, 235, 0.1); padding: 6px 16px; border-radius: 100px; border: 1px solid rgba(37, 99, 235, 0.2); }
+        .focus-task { font-size: 2.5rem; font-weight: 600; text-align: center; max-width: 800px; margin-bottom: 32px; line-height: 1.3; color: #fff; text-shadow: 0 0 30px rgba(255,255,255,0.1); letter-spacing: -0.02em; }
+        .focus-timer { font-size: 3rem; color: var(--text-muted); font-weight: 400; margin-bottom: 48px; font-family: 'JetBrains Mono', monospace; opacity: 0.8; }
+        .focus-btn { padding: 16px 40px; border-radius: 100px; font-size: 1rem; border:none; cursor: pointer; transition: all 0.2s var(--ease-spring); font-weight: 600; letter-spacing: 0.02em; }
+        .focus-btn.primary { background: var(--text-main); color: #000; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
         .focus-btn.primary:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,255,255,0.4); }
-        .focus-btn.secondary { 
-            background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            color: var(--text-main); 
-            margin-right: 12px;
-        }
+        .focus-btn.secondary { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-main); margin-right: 12px; }
         .focus-btn.secondary:hover { background: rgba(255,255,255,0.1); }
-        .focus-exit {
-            position: absolute; top: 32px; right: 32px;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-muted); padding: 8px 16px; border-radius: 100px; cursor: pointer;
-            font-size: 0.85rem; transition: all 0.2s;
-        }
+        .focus-exit { position: absolute; top: 32px; right: 32px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-muted); padding: 8px 16px; border-radius: 100px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
         .focus-exit:hover { background: rgba(255,255,255,0.1); color: white; }
 
         /* WEEK GRID */
         .week-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-top: 1.5rem; }
-        .week-day { 
-            background: rgba(255,255,255,0.02); 
-            border: 1px solid var(--border-subtle); 
-            border-radius: var(--radius-sm); 
-            padding: 16px 8px; 
-            transition: all 0.2s;
-            text-align: center;
-        }
-        .week-day.today { 
-            background: var(--saas-green-dim); 
-            border-color: var(--saas-green); 
-            box-shadow: 0 4px 15px rgba(13, 159, 110, 0.1); 
-        }
+        .week-day { background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 16px 8px; transition: all 0.2s; text-align: center; }
+        .week-day.today { background: var(--saas-green-dim); border-color: var(--saas-green); box-shadow: 0 4px 15px rgba(13, 159, 110, 0.1); }
         .week-day-name { font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
         .week-day-theme { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
 
         /* MODALS */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            backdrop-filter: blur(12px); 
-            background: rgba(0,0,0,0.7); 
-            z-index: 999; display: none; justify-content: center; align-items: center;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; backdrop-filter: blur(12px); background: rgba(0,0,0,0.7); z-index: 999; display: none; justify-content: center; align-items: center; }
         .modal-overlay.show { display: flex; animation: fadeIn 0.2s ease; }
-        .modal-content { 
-            background: #0F1115; 
-            border: 1px solid var(--border-subtle); 
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6); 
-            text-align: center; max-width: 420px; width: 90%; padding: 2rem; border-radius: var(--radius-lg); 
-        }
+        .modal-content { background: #0F1115; border: 1px solid var(--border-subtle); box-shadow: 0 20px 60px rgba(0,0,0,0.6); text-align: center; max-width: 420px; width: 90%; padding: 2rem; border-radius: var(--radius-lg); }
         .shutdown-title { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin-bottom: 0.5rem; }
         .shutdown-subtitle { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem; }
-        .shutdown-btn { 
-            background: var(--text-main); color: #000; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; width: 100%; border-radius: var(--radius-sm); font-size: 0.9rem; 
-            transition: transform 0.2s; 
-        }
+        .shutdown-btn { background: var(--text-main); color: #000; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; width: 100%; border-radius: var(--radius-sm); font-size: 0.9rem; transition: transform 0.2s; }
         .shutdown-btn:hover { transform: scale(1.02); }
         .import-area { width: 100%; height: 120px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); color: var(--saas-green); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; padding: 12px; border-radius: var(--radius-sm); margin-bottom: 1rem; resize: none; }
         .copy-prompt-btn { background: rgba(59, 130, 246, 0.1); color: var(--pro-blue); border: 1px solid rgba(59, 130, 246, 0.2); padding: 10px; width: 100%; border-radius: var(--radius-sm); font-weight: 600; font-size: 0.8rem; cursor: pointer; margin-bottom: 1rem; }
 
         /* RESPONSIVE */
-        @media (max-width: 1024px) {
-            .pillar-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        @media (max-width: 1024px) { .pillar-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 768px) {
-            .sidebar { width: 64px; } 
-            .braindump-wrapper { display: none; } 
-            .pillar-grid { grid-template-columns: 1fr; } 
-            .week-grid { grid-template-columns: repeat(3, 1fr); } 
-            .main-content { padding: 20px; }
-            .top3-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .cockpit-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+            .sidebar { width: 64px; } .braindump-wrapper { display: none; } .pillar-grid { grid-template-columns: 1fr; } .week-grid { grid-template-columns: repeat(3, 1fr); } .main-content { padding: 20px; }
+            .top3-header { flex-direction: column; align-items: flex-start; gap: 10px; } .cockpit-header { flex-direction: column; align-items: flex-start; gap: 16px; }
         }
         .hidden { display: none !important; }
     </style>
@@ -654,7 +494,12 @@
 <body>
 
 <header id="main-header">
-    <div class="brand">HUZINE<span>//OS</span><span class="crisis-tag hidden" id="crisis-tag">CRISE</span></div>
+    <div class="brand">
+        HUZINE<span>//OS</span>
+        <span class="crisis-tag hidden" id="crisis-tag">CRISE</span>
+        <!-- NEW OFFICE TAG -->
+        <span id="office-alert" class="office-tag">🏢 BUREAU</span>
+    </div>
     <div class="braindump-wrapper">
         <span class="braindump-icon">⚡</span>
         <input type="text" id="braindump-input" class="braindump-input" placeholder="Capture rapide... (Entrée)">
@@ -700,7 +545,7 @@
                 <div class="top3-list" id="top3-list"></div>
             </div>
 
-            <!-- 4 PILLAR CARDS -->
+            <!-- 4 PILLAR CARDS WITH BUDGET BARS -->
             <div class="pillar-grid" id="pillar-grid"></div>
 
             <!-- JOURNAL -->
@@ -910,31 +755,16 @@ Analyse le document ou texte fourni.
 `;
 
 // ===============================================
-// DATA
-// ===============================================
-const defaultData = {
-    tasks: [],
-    metrics: { mrr: '0', users: '0' },
-    settings: { annabaDate: '', coproDate: '', crisisMode: false },
-    journal: [],
-    review: { win: '', fail: '', priority: '' }
-};
-
-let data = JSON.parse(localStorage.getItem('huzine_os_v5')) || JSON.parse(JSON.stringify(defaultData));
-data.tasks.forEach(t => { if (t.todayStar === undefined) t.todayStar = false; });
-if (data.settings.crisisMode === undefined) data.settings.crisisMode = false;
-
-// ===============================================
-// DAY CONFIG
+// DAY CONFIG (HYBRID BUILDER MATRIX)
 // ===============================================
 const dayConfig = {
-    0: { focus: 'vie', medium: 'patri', light: 'pro', faded: 'saas', label: 'WEEK-END', color: 'var(--vie-pink)' },
-    1: { focus: 'pro', medium: 'saas', light: 'vie', faded: 'patri', label: 'PRO FOCUS', color: 'var(--pro-blue)' },
-    2: { focus: 'saas', medium: 'pro', light: 'vie', faded: 'patri', label: 'SAAS FOCUS', color: 'var(--saas-green)' },
-    3: { focus: 'pro', medium: 'patri', light: 'vie', faded: 'saas', label: 'PRO + PATRI', color: 'var(--pro-blue)' },
-    4: { focus: 'saas', medium: 'pro', light: 'vie', faded: 'patri', label: 'SAAS FOCUS', color: 'var(--saas-green)' },
-    5: { focus: 'patri', medium: 'pro', light: 'vie', faded: 'saas', label: 'PATRIMOINE', color: 'var(--patri-purple)' },
-    6: { focus: 'vie', medium: 'patri', light: 'pro', faded: 'saas', label: 'WEEK-END', color: 'var(--vie-pink)' }
+    1: { name: 'Lundi', label: '🚀 LAUNCH & CODE', theme: 'var(--saas-green)', office: false, budgets: { pro: 2, saas: 4, patri: 1, vie: 1 } },
+    2: { name: 'Mardi', label: '🎭 THEATRE & CODE', theme: 'var(--pro-blue)', office: true, budgets: { pro: 4, saas: 3, patri: 0, vie: 0 } },
+    3: { name: 'Mercredi', label: '📞 PIVOT ADMIN', theme: 'var(--vie-pink)', office: false, budgets: { pro: 1, saas: 2, patri: 2, vie: 3 } },
+    4: { name: 'Jeudi', label: '🏢 THEATRE & SAAS', theme: 'var(--saas-green)', office: true, budgets: { pro: 4, saas: 4, patri: 0, vie: 0 } },
+    5: { name: 'Vendredi', label: '📊 DELIVERY', theme: 'var(--pro-blue)', office: false, budgets: { pro: 3, saas: 0, patri: 2, vie: 1 } },
+    6: { name: 'Samedi', label: '🧘‍♂️ WEEK-END', theme: 'var(--vie-pink)', office: false, budgets: { pro: 0, saas: 2, patri: 0, vie: 4 } },
+    0: { name: 'Dimanche', label: '🧘‍♂️ WEEK-END', theme: 'var(--vie-pink)', office: false, budgets: { pro: 0, saas: 2, patri: 0, vie: 4 } }
 };
 
 const pillarInfo = {
@@ -945,9 +775,31 @@ const pillarInfo = {
 };
 
 // ===============================================
+// DATA & STATE
+// ===============================================
+const defaultData = {
+    tasks: [],
+    metrics: { mrr: '0', users: '0' },
+    settings: { annabaDate: '', coproDate: '', crisisMode: false },
+    journal: [],
+    review: { win: '', fail: '', priority: '' },
+    // NEW: Daily progress tracking
+    dailyProgress: { pro: 0, saas: 0, patri: 0, vie: 0, lastReset: new Date().toDateString() }
+};
+
+let data = JSON.parse(localStorage.getItem('huzine_os_hybrid')) || JSON.parse(JSON.stringify(defaultData));
+
+// Clean up old data structure if needed
+if (!data.dailyProgress) { 
+    data.dailyProgress = { pro: 0, saas: 0, patri: 0, vie: 0, lastReset: new Date().toDateString() };
+}
+data.tasks.forEach(t => { if (t.todayStar === undefined) t.todayStar = false; });
+
+// ===============================================
 // INIT
 // ===============================================
 function init() {
+    checkDailyReset();
     updateClock();
     setInterval(updateClock, 1000);
     setInterval(checkShutdownTime, 60000);
@@ -971,64 +823,104 @@ function init() {
     });
 }
 
+function checkDailyReset() {
+    const today = new Date().toDateString();
+    if (data.dailyProgress.lastReset !== today) {
+        data.dailyProgress = { pro: 0, saas: 0, patri: 0, vie: 0, lastReset: today };
+        saveData();
+    }
+}
+
 function saveData() {
     const dateAnnaba = document.getElementById('date-annaba');
     const dateCopro = document.getElementById('date-copro');
     if (dateAnnaba) data.settings.annabaDate = dateAnnaba.value;
     if (dateCopro) data.settings.coproDate = dateCopro.value;
-    localStorage.setItem('huzine_os_v5', JSON.stringify(data));
+    localStorage.setItem('huzine_os_hybrid', JSON.stringify(data));
     renderAll();
 }
 
 function setupDay() {
-    const days = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-    const now = new Date();
-    const dayIdx = now.getDay();
-    const hour = now.getHours();
+    const today = new Date();
+    const dayIdx = today.getDay();
+    const hour = today.getHours();
     const config = dayConfig[dayIdx];
 
+    // Badge
     const badge = document.getElementById('day-badge');
-    const greetingText = document.getElementById('greeting-text');
+    badge.textContent = config.name + ' // ' + config.label;
+    badge.style.background = config.theme;
 
+    // Greeting
+    const greetingText = document.getElementById('greeting-text');
     if (hour < 12) greetingText.textContent = 'Bon matin';
     else if (hour < 18) greetingText.textContent = 'Bon après-midi';
     else greetingText.textContent = 'Bonne soirée';
 
-    badge.textContent = config.label + ' // ' + days[dayIdx];
-    badge.style.background = config.color;
+    // Office Tag Logic (Tue/Thu morning)
+    const officeTag = document.getElementById('office-alert');
+    if (config.office && hour < 13) {
+        officeTag.classList.add('active');
+    } else {
+        officeTag.classList.remove('active');
+    }
 }
 
 // ===============================================
-// RENDERING
+// RENDERING (WITH BUDGETS)
 // ===============================================
 function renderPillarGrid() {
     const dayIdx = new Date().getDay();
     const config = dayConfig[dayIdx];
     const grid = document.getElementById('pillar-grid');
     
-    const order = [config.focus, config.medium, config.light, config.faded];
-    const levels = { [config.focus]: 'focus', [config.medium]: 'medium', [config.light]: 'light', [config.faded]: 'faded' };
+    // Fixed order based on Volumetric Matrix: Pro, SaaS, Patri, Vie
+    const order = ['pro', 'saas', 'patri', 'vie'];
     
     grid.innerHTML = order.map(pillarKey => {
         const info = pillarInfo[pillarKey];
-        const level = levels[pillarKey];
         const tasks = data.tasks.filter(t => info.types.includes(t.type));
-        const activeTasks = tasks.filter(t => !t.done).slice(0, 5); // Increased to 5
+        const activeTasks = tasks.filter(t => !t.done).slice(0, 5);
         const doneCount = tasks.filter(t => t.done).length;
         const totalCount = tasks.length;
         
+        // Budget Calc
+        const budget = config.budgets[pillarKey];
+        const current = data.dailyProgress[pillarKey] || 0;
+        const pct = budget > 0 ? Math.min((current / budget) * 100, 100) : 0;
+        
+        // Determines opacity based on importance today
+        let cardClass = 'medium';
+        if (budget >= 3) cardClass = 'focus';
+        else if (budget === 0) cardClass = 'faded';
+
+        let budgetHtml = '';
+        if (budget === 0) {
+            budgetHtml = `<div class="budget-labels"><span>OFF TODAY</span><span>--</span></div><div class="budget-track"><div class="budget-fill" style="width:0; background:${info.color}"></div></div>`;
+        } else {
+            budgetHtml = `
+                <div class="budget-labels">
+                    <span>Objectif: ${budget}h</span>
+                    <span>${current.toFixed(1)}h</span>
+                </div>
+                <div class="budget-track">
+                    <div class="budget-fill" style="width:${pct}%; background:${info.color}"></div>
+                </div>`;
+        }
+        
         return `
-            <div class="pillar-card ${level} ${info.themeClass}" style="--theme: ${info.color}">
-                ${level === 'focus' ? '<div class="pillar-focus-tag">FOCUS</div>' : ''}
+            <div class="pillar-card ${cardClass} ${info.themeClass}" style="--theme: ${info.color}">
+                ${cardClass === 'focus' ? '<div class="pillar-focus-tag">FOCUS</div>' : ''}
                 <div class="pillar-header">
                     <span class="pillar-title" style="color:${info.color}">${info.icon} ${info.name}</span>
                     <span class="pillar-badge">${totalCount - doneCount}</span>
                 </div>
+                <div class="budget-container">${budgetHtml}</div>
                 <div class="pillar-tasks">
                     ${activeTasks.length === 0 ? '<div class="top3-empty" style="border:none; padding:10px 0; font-size:0.8rem; text-align:left;">Aucune tâche active.</div>' : 
                         activeTasks.map(t => `
                             <div class="task-row">
-                                <input type="checkbox" class="task-check" onclick="event.stopPropagation(); toggleTask(${t.id})">
+                                <input type="checkbox" class="task-check" onclick="event.stopPropagation(); toggleTask(${t.id}, '${pillarKey}')">
                                 <span class="task-content" onclick="startFocusOnTask(${t.id})">${escapeHtml(t.text)}</span>
                                 <button class="task-star ${t.todayStar ? 'active' : ''}" onclick="event.stopPropagation(); toggleStar(${t.id})">★</button>
                             </div>
@@ -1061,12 +953,17 @@ function renderTop3() {
     
     el.innerHTML = starred.map(t => `
         <div class="task-row">
-            <input type="checkbox" class="task-check" onclick="event.stopPropagation(); toggleTask(${t.id})">
+            <input type="checkbox" class="task-check" onclick="event.stopPropagation(); toggleTask(${t.id}, '${getPillarKey(t.type)}')">
             <span class="task-type-dot" style="background:${getColor(t.type)}; color:${getColor(t.type)}"></span>
             <span class="task-content" onclick="startFocusOnTask(${t.id})">${escapeHtml(t.text)}</span>
             <button class="task-star active" onclick="event.stopPropagation(); toggleStar(${t.id})">★</button>
         </div>
     `).join('');
+}
+
+function getPillarKey(type) {
+    if(['annaba','copro','airbnb','maison'].includes(type)) return 'patri';
+    return type; // pro, saas, vie
 }
 
 function renderTable(elementId, type) {
@@ -1077,7 +974,7 @@ function renderTable(elementId, type) {
 
     el.innerHTML = tasks.map(t => `
         <tr class="${t.done ? 'task-done' : ''}">
-            <td><input type="checkbox" class="task-check" style="margin:0" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})"></td>
+            <td><input type="checkbox" class="task-check" style="margin:0" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id}, '${type}')"></td>
             <td class="task-content" style="${t.done ? 'text-decoration:line-through; color:var(--text-dim);' : ''}">${escapeHtml(t.text)}</td>
             <td><button class="task-star ${t.todayStar ? 'active' : ''}" onclick="toggleStar(${t.id})">★</button></td>
             <td><button onclick="deleteTask(${t.id})" class="task-delete">✕</button></td>
@@ -1093,7 +990,7 @@ function renderProjectList(elementId, type) {
 
     el.innerHTML = tasks.map(t => `
         <div class="task-row ${t.done ? 'task-done' : ''}">
-            <input type="checkbox" class="task-check" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id})">
+            <input type="checkbox" class="task-check" ${t.done ? 'checked' : ''} onclick="toggleTask(${t.id}, 'patri')">
             <span class="task-content">${escapeHtml(t.text)}</span>
             <button class="task-star ${t.todayStar ? 'active' : ''}" onclick="toggleStar(${t.id})">★</button>
             <button class="task-delete" onclick="deleteTask(${t.id})">✕</button>
@@ -1121,9 +1018,17 @@ function addTask(type, text, priority = 'M') {
     saveData();
 }
 
-function toggleTask(id) {
+function toggleTask(id, pillarKey) {
     const task = data.tasks.find(t => t.id === id);
-    if (task) { task.done = !task.done; if (task.done) task.todayStar = false; saveData(); }
+    if (task) { 
+        task.done = !task.done; 
+        if (task.done) {
+            task.todayStar = false; 
+            // AUTO-FILL BUDGET: 1 Task = 0.75h (45 mins)
+            data.dailyProgress[pillarKey] = (data.dailyProgress[pillarKey] || 0) + 0.75;
+        }
+        saveData(); 
+    }
 }
 
 function deleteTask(id) {
@@ -1215,12 +1120,12 @@ function createTaskFromPriority() {
 
 function renderWeekGrid() {
     const weekDays = [
-        { name: 'Lundi', theme: 'PRO', color: 'var(--pro-blue)', idx: 1 },
-        { name: 'Mardi', theme: 'SaaS', color: 'var(--saas-green)', idx: 2 },
-        { name: 'Mercredi', theme: 'PRO+Patri', color: 'var(--pro-blue)', idx: 3 },
-        { name: 'Jeudi', theme: 'SaaS', color: 'var(--saas-green)', idx: 4 },
-        { name: 'Vendredi', theme: 'Patrimoine', color: 'var(--patri-purple)', idx: 5 },
-        { name: 'W-E', theme: 'Vie', color: 'var(--vie-pink)', idx: 0 }
+        { name: 'Lundi', theme: 'LAUNCH', color: 'var(--saas-green)', idx: 1 },
+        { name: 'Mardi', theme: 'OFFICE', color: 'var(--pro-blue)', idx: 2 },
+        { name: 'Mercredi', theme: 'ADMIN', color: 'var(--vie-pink)', idx: 3 },
+        { name: 'Jeudi', theme: 'TECH', color: 'var(--saas-green)', idx: 4 },
+        { name: 'Vendredi', theme: 'DELIVERY', color: 'var(--pro-blue)', idx: 5 },
+        { name: 'W-E', theme: 'VIE', color: 'var(--vie-pink)', idx: 0 }
     ];
     const today = new Date().getDay();
     document.getElementById('week-grid').innerHTML = weekDays.map(d => `
@@ -1328,7 +1233,10 @@ function toggleFocusMode() {
     if (task) startFocusOnTask(task.id); else alert('Aucune tâche active !');
 }
 function exitFocusMode() { document.getElementById('focus-overlay').classList.remove('show'); focusModeActive = false; currentFocusTaskId = null; clearInterval(focusTimerInterval); focusTimerInterval = null; }
-function completeFocusTask() { if (currentFocusTaskId) { const task = data.tasks.find(t => t.id === currentFocusTaskId); if (task) { task.done = true; task.todayStar = false; addJournalEntry(`✓ ${task.text}`); saveData(); } nextFocusTask(); } }
+function completeFocusTask() { if (currentFocusTaskId) { const task = data.tasks.find(t => t.id === currentFocusTaskId); if (task) { task.done = true; task.todayStar = false; 
+    const pillarKey = getPillarKey(task.type);
+    data.dailyProgress[pillarKey] = (data.dailyProgress[pillarKey] || 0) + 0.75; // Add time
+    addJournalEntry(`✓ ${task.text}`); saveData(); } nextFocusTask(); } }
 function nextFocusTask() { clearInterval(focusTimerInterval); focusTimerInterval = null; focusSeconds = 0; let next = data.tasks.find(t => t.todayStar && !t.done && t.id !== currentFocusTaskId); if (!next) next = data.tasks.find(t => !t.done && t.id !== currentFocusTaskId); if (next) startFocusOnTask(next.id); else { document.getElementById('focus-task-text').textContent = '🎉 Tout est terminé !'; currentFocusTaskId = null; } }
 function toggleFocusTimer() { const btn = document.getElementById('focus-toggle-btn'); if (focusTimerInterval) { clearInterval(focusTimerInterval); focusTimerInterval = null; btn.textContent = '▶ Reprendre'; } else { focusTimerInterval = setInterval(() => { focusSeconds++; const m = String(Math.floor(focusSeconds/60)).padStart(2,'0'), s = String(focusSeconds%60).padStart(2,'0'); document.getElementById('focus-timer-display').textContent = m+':'+s; }, 1000); btn.textContent = '⏸ Pause'; } }
 
