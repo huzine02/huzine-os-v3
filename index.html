@@ -195,7 +195,7 @@
         
         .pillar-tasks { flex: 1; display: flex; flex-direction: column; gap: 4px; }
 
-        /* TASKS */
+        /* TASKS - UPDATED DELETE BUTTON VISIBILITY */
         .task-row { display: flex; align-items: center; padding: 10px 12px; border-radius: var(--radius-sm); transition: all 0.2s; border: 1px solid transparent; cursor: pointer; }
         .task-row:hover { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.05); }
         .task-check { appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--text-dim); border-radius: 5px; margin-right: 14px; cursor: pointer; flex-shrink: 0; background: transparent; }
@@ -209,9 +209,19 @@
         .task-row:hover .task-star { opacity: 1; }
         .task-star.active { color: var(--star-gold); opacity: 1; transform: scale(1.1); text-shadow: 0 0 10px var(--star-gold-glow); }
         
-        .task-delete { background: none; border: none; color: var(--alert-red); cursor: pointer; opacity: 0; margin-left: 10px; transition: all 0.2s; }
-        .task-row:hover .task-delete { opacity: 0.6; }
-        .task-delete:hover { opacity: 1; }
+        /* DELETE BUTTON VISIBILITY FIX */
+        .task-delete { 
+            background: none; border: none; 
+            color: var(--text-dim); /* Gris par défaut */
+            cursor: pointer; 
+            opacity: 0.4; /* Visible mais discret */
+            margin-left: 10px; transition: all 0.2s; 
+        }
+        .task-delete:hover { 
+            color: var(--alert-red); 
+            opacity: 1; 
+            transform: scale(1.1); 
+        }
 
         .add-task-btn { width: 100%; padding: 12px; margin-top: 16px; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); color: var(--text-muted); cursor: pointer; border-radius: var(--radius-sm); font-size: 0.8rem; transition: all 0.2s; font-weight: 500; }
         .add-task-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-main); }
@@ -279,6 +289,8 @@
     </div>
     <div class="header-controls">
         <div id="clock" style="font-family:'JetBrains Mono'; font-weight:600; margin-right:8px;">00:00</div>
+        <!-- NEW RESET BUTTON -->
+        <button class="btn-icon" onclick="resetDay()" title="Reset Jauges 0h" style="margin-right:8px;">↻</button>
         <button class="btn-header" onclick="openAiImport()" style="border-color:var(--patri-purple); color:var(--patri-purple);">📥 IMPORT</button>
         <button class="btn-header" id="btn-focus" onclick="toggleFocusMode()">🎯 FOCUS</button>
         <button class="btn-header crisis" id="btn-crisis" onclick="toggleCrisisMode()">🚨</button>
@@ -588,7 +600,7 @@ function saveData() {
     if (dateAnnaba) data.settings.annabaDate = dateAnnaba.value;
     if (dateCopro) data.settings.coproDate = dateCopro.value;
     localStorage.setItem('huzine_os_hybrid', JSON.stringify(data));
-    // Not calling renderAll here to avoid infinite loops in some contexts
+    renderAll();
 }
 
 function setupDay() {
@@ -660,6 +672,7 @@ function renderPillarGrid() {
                                 <input type="checkbox" class="task-check" onclick="event.stopPropagation(); toggleTask(${t.id}, '${pillarKey}')">
                                 <span class="task-content" onclick="startFocusOnTask(${t.id})">${escapeHtml(t.text)}</span>
                                 <button class="task-star ${t.todayStar ? 'active' : ''}" onclick="event.stopPropagation(); toggleStar(${t.id})">★</button>
+                                <button class="task-delete" onclick="event.stopPropagation(); deleteTask(${t.id})">✕</button>
                             </div>
                         `).join('')
                     }
@@ -694,6 +707,7 @@ function renderTop3() {
             <span class="task-type-dot" style="background:${getColor(t.type)}; color:${getColor(t.type)}"></span>
             <span class="task-content" onclick="startFocusOnTask(${t.id})">${escapeHtml(t.text)}</span>
             <button class="task-star active" onclick="event.stopPropagation(); toggleStar(${t.id})">★</button>
+            <button class="task-delete" onclick="event.stopPropagation(); deleteTask(${t.id})">✕</button>
         </div>
     `).join('');
 }
@@ -764,7 +778,7 @@ function renderAll() {
 }
 
 // ===============================================
-// LOGIC (UPDATED WITH T-SHIRT SIZING & FIXES)
+// LOGIC
 // ===============================================
 function getTaskDuration(text) {
     const match = text.match(/\((\d+)\)/);
@@ -779,7 +793,6 @@ function addTask(type, text, priority = 'M') {
         todayStar: false, createdAt: new Date().toISOString()
     });
     saveData();
-    renderAll();
 }
 
 function toggleTask(id, pillarKey) {
@@ -795,23 +808,26 @@ function toggleTask(id, pillarKey) {
             data.dailyProgress[pillarKey] = Math.max(0, (data.dailyProgress[pillarKey] || 0) - duration);
         }
         saveData(); 
-        renderAll();
     }
 }
 
 function deleteTask(id) {
     const task = data.tasks.find(t => t.id === id);
     if (task) {
-        // FIX: If task was done, subtract time before deleting
         if (task.done) {
             const duration = getTaskDuration(task.text);
             const pillarKey = getPillarKey(task.type);
             data.dailyProgress[pillarKey] = Math.max(0, (data.dailyProgress[pillarKey] || 0) - duration);
         }
-        // Remove from array
         data.tasks = data.tasks.filter(t => t.id !== id);
         saveData();
-        renderAll();
+    }
+}
+
+function resetDay() {
+    if(confirm("Remettre les jauges à zéro pour aujourd'hui ?")) {
+        data.dailyProgress = { pro: 0, saas: 0, patri: 0, vie: 0, lastReset: new Date().toDateString() };
+        saveData();
     }
 }
 
@@ -823,7 +839,6 @@ function toggleStar(id) {
     else if (currentStars < 3) { task.todayStar = true; }
     else { alert('Max 3 tâches TOP !'); return; }
     saveData();
-    renderAll();
 }
 
 function addNewTask(type) {
@@ -850,7 +865,6 @@ function addJournalEntry(autoText = null) {
     data.journal.unshift({ time: now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }), text, date: now.toDateString() });
     if (!autoText) input.value = '';
     saveData();
-    renderAll();
 }
 
 function toggleJournal() {
@@ -887,7 +901,6 @@ function createTaskFromPriority() {
     const task = data.tasks.find(t => t.text === priority && !t.done);
     if (task) task.todayStar = true;
     saveData();
-    renderAll();
     alert('Tâche créée et marquée TOP 3 !');
 }
 
